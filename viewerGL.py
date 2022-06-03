@@ -131,5 +131,6 @@ class ViewerGL:
             ).yaw] += np.pi
             self.cam.transformation.rotation_center = self.objs[0].transformation.translation + \
                 self.objs[0].transformation.rotation_center
+            # on peut choisir l'offset lorsque l'on suit l'objet
             self.cam.transformation.translation = self.objs[0].transformation.translation + pyrr.Vector3([
-                                                                                                         0, 1, 5])
+                                                                                                         0, 1.75, 5])
