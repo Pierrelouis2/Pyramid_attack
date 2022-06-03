@@ -9,7 +9,8 @@ class Transformation3D:
         self.rotation_center = center.copy()
         self.translation = translation.copy()
 
-
+  
+  
 class Object:
     def __init__(self, vao, nb_triangle, program, texture):
         self.vao = vao
