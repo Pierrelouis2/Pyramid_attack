@@ -20,10 +20,11 @@ def main():
     programGUI_id = glutils.create_program_from_file(
         'vert/gui.vert', 'frag/gui.frag')
 
-    #stego
+    # Pyramide
     m = Mesh.load_obj('Textures/pyramid-simple-design.obj')
     m.normalize()
-    m.apply_matrix(pyrr.matrix44.create_from_scale([2, 2, 2, 1]))
+    # Taille de la pyramide
+    m.apply_matrix(pyrr.matrix44.create_from_scale([0.5, 0.5, 0.5, 1]))
     tr = Transformation3D()
     tr.translation.y = -np.amin(m.vertices, axis=0)[1]
     tr.translation.z = -5
