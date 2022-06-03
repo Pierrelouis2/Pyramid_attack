@@ -33,6 +33,8 @@ class ViewerGL:
         self.objs = []
         self.touch = {}
 
+        self.lock_cam = True
+
     def run(self):
         # boucle d'affichage
         while not glfw.window_should_close(self.window):
@@ -124,7 +126,10 @@ class ViewerGL:
             self.cam.transformation.rotation_euler[pyrr.euler.index(
             ).yaw] += 0.1
 
-        if glfw.KEY_SPACE in self.touch and self.touch[glfw.KEY_SPACE] > 0:
+        if glfw.KEY_C in self.touch and self.touch[glfw.KEY_C] > 0:
+            self.lock_cam = not self.lock_cam
+
+        if self.lock_cam:
             self.cam.transformation.rotation_euler = self.objs[0].transformation.rotation_euler.copy(
             )
             self.cam.transformation.rotation_euler[pyrr.euler.index(
@@ -133,4 +138,4 @@ class ViewerGL:
                 self.objs[0].transformation.rotation_center
             # on peut choisir l'offset lorsque l'on suit l'objet
             self.cam.transformation.translation = self.objs[0].transformation.translation + pyrr.Vector3([
-                                                                                                         0, 0.75, 2.556])
+                                                                                                            0, 0.75, 2.556])

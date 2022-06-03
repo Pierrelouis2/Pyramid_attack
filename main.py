@@ -1,11 +1,11 @@
 from viewerGL import ViewerGL
 import glutils
 from mesh import Mesh
-from cpe3d import Object3D, Camera, Transformation3D, Text
+from cpe3d import oObject3D, Camera, Transformation3D, Text
 import numpy as np
 import OpenGL.GL as GL
 import pyrr
-
+import random as rand
 
 def main():
     viewer = ViewerGL()
@@ -41,9 +41,20 @@ def main():
     m.apply_matrix(pyrr.matrix44.create_from_scale([0.25, 0.25, 0.25, 1]))
     tr = Transformation3D()
     tr.translation.y = -np.amin(m.vertices, axis=0)[1]
-    tr.translation.z = -5
+    #spawn des pyramide de maniere circulaire
+
+    for i in range(nbr_pyramide) :
+        teta = rand.randint(0,10)
+        x = 10 * math.cos(teta)
+
+
+
+
+    tr.translation.z = -10
     tr.rotation_center.z = 0
     texture = glutils.load_texture('Textures/architecture.jpg')
+
+
     o = Object3D(m.load_to_gpu(), m.get_nb_triangles(),
                  program3d_id, texture, tr)
     viewer.add_object(o)
