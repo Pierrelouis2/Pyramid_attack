@@ -12,7 +12,7 @@ def main():
 
     # Cam
     viewer.set_camera(Camera())
-    viewer.cam.transformation.translation.y = 0.7
+    viewer.cam.transformation.translation.y = 1.7
     viewer.cam.transformation.rotation_center = viewer.cam.transformation.translation.copy()
 
     program3d_id = glutils.create_program_from_file(
