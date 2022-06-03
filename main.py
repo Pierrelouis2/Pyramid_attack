@@ -34,6 +34,20 @@ def main():
                  program3d_id, texture, tr)
     viewer.add_object(o)
 
+    # humain
+    m = Mesh.load_obj('Textures/standard-male-figure.obj')
+    m.normalize()
+    # Taille de la pyramide
+    m.apply_matrix(pyrr.matrix44.create_from_scale([0.5, 0.5, 0.5, 1]))
+    tr = Transformation3D()
+    tr.translation.y = -np.amin(m.vertices, axis=0)[1]
+    tr.translation.z = -5
+    tr.rotation_center.z = 0.2
+    texture = glutils.load_texture('Textures/multicolo.jpg')
+    o = Object3D(m.load_to_gpu(), m.get_nb_triangles(),
+                 program3d_id, texture, tr)
+    viewer.add_object(o)
+
     # Sol
     m = Mesh()
     p0, p1, p2, p3 = [-25, 0, -25], [25, 0, -25], [25, 0, 25], [-25, 0, 25]
