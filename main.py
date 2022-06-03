@@ -20,18 +20,18 @@ def main():
     programGUI_id = glutils.create_program_from_file(
         'vert/gui.vert', 'frag/gui.frag')
 
-    # stego
-    # m = Mesh.load_obj('stegosaurus.obj')
-    # m.normalize()
-    # m.apply_matrix(pyrr.matrix44.create_from_scale([2, 2, 2, 1]))
-    # tr = Transformation3D()
-    # tr.translation.y = -np.amin(m.vertices, axis=0)[1]
-    # tr.translation.z = -5
-    # tr.rotation_center.z = 0.2
-    # texture = glutils.load_texture('stegosaurus.jpg')
-    # o = Object3D(m.load_to_gpu(), m.get_nb_triangles(),
-    #              program3d_id, texture, tr)
-    # viewer.add_object(o)
+    #stego
+    m = Mesh.load_obj('Textures/pyramid-simple-design.obj')
+    m.normalize()
+    m.apply_matrix(pyrr.matrix44.create_from_scale([2, 2, 2, 1]))
+    tr = Transformation3D()
+    tr.translation.y = -np.amin(m.vertices, axis=0)[1]
+    tr.translation.z = -5
+    tr.rotation_center.z = 0.2
+    texture = glutils.load_texture('Textures/architecture.jpg')
+    o = Object3D(m.load_to_gpu(), m.get_nb_triangles(),
+                 program3d_id, texture, tr)
+    viewer.add_object(o)
 
     # Sol
     m = Mesh()
