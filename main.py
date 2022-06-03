@@ -41,7 +41,7 @@ def main():
     m.vertices = np.array([[p0 + n + c + t0], [p1 + n + c + t1],
                           [p2 + n + c + t2], [p3 + n + c + t3]], np.float32)
     m.faces = np.array([[0, 1, 2], [0, 2, 3]], np.uint32)
-    texture = glutils.load_texture('Textures/TextureSand.jpg')
+    texture = glutils.load_texture('Textures/TextureSand.jpeg')
     o = Object3D(m.load_to_gpu(), m.get_nb_triangles(),
                  program3d_id, texture, Transformation3D())
     viewer.add_object(o)
