@@ -16,21 +16,22 @@ def main():
     viewer.cam.transformation.rotation_center = viewer.cam.transformation.translation.copy()
 
     program3d_id = glutils.create_program_from_file(
-        'shader.vert', 'shader.frag')
-    programGUI_id = glutils.create_program_from_file('gui.vert', 'gui.frag')
+        'vert/shader.vert', 'frag/shader.frag')
+    programGUI_id = glutils.create_program_from_file(
+        'vert/gui.vert', 'frag/gui.frag')
 
     # stego
-    m = Mesh.load_obj('stegosaurus.obj')
-    m.normalize()
-    m.apply_matrix(pyrr.matrix44.create_from_scale([2, 2, 2, 1]))
-    tr = Transformation3D()
-    tr.translation.y = -np.amin(m.vertices, axis=0)[1]
-    tr.translation.z = -5
-    tr.rotation_center.z = 0.2
-    texture = glutils.load_texture('stegosaurus.jpg')
-    o = Object3D(m.load_to_gpu(), m.get_nb_triangles(),
-                 program3d_id, texture, tr)
-    viewer.add_object(o)
+    # m = Mesh.load_obj('stegosaurus.obj')
+    # m.normalize()
+    # m.apply_matrix(pyrr.matrix44.create_from_scale([2, 2, 2, 1]))
+    # tr = Transformation3D()
+    # tr.translation.y = -np.amin(m.vertices, axis=0)[1]
+    # tr.translation.z = -5
+    # tr.rotation_center.z = 0.2
+    # texture = glutils.load_texture('stegosaurus.jpg')
+    # o = Object3D(m.load_to_gpu(), m.get_nb_triangles(),
+    #              program3d_id, texture, tr)
+    # viewer.add_object(o)
 
     # Sol
     m = Mesh()
@@ -40,20 +41,20 @@ def main():
     m.vertices = np.array([[p0 + n + c + t0], [p1 + n + c + t1],
                           [p2 + n + c + t2], [p3 + n + c + t3]], np.float32)
     m.faces = np.array([[0, 1, 2], [0, 2, 3]], np.uint32)
-    texture = glutils.load_texture('grass.jpg')
+    texture = glutils.load_texture('Textures/TextureSand.jpg')
     o = Object3D(m.load_to_gpu(), m.get_nb_triangles(),
                  program3d_id, texture, Transformation3D())
     viewer.add_object(o)
 
     # Text
-    vao = Text.initalize_geometry()
-    texture = glutils.load_texture('fontB.jpg')
-    o = Text('Bonjour les', np.array([-0.8, 0.3], np.float32), np.array(
-        [0.8, 0.8], np.float32), vao, 2, programGUI_id, texture)
-    viewer.add_object(o)
-    o = Text('3ETI', np.array([-0.5, -0.2], np.float32),
-             np.array([0.5, 0.3], np.float32), vao, 2, programGUI_id, texture)
-    viewer.add_object(o)
+    # vao = Text.initalize_geometry()
+    # texture = glutils.load_texture('fontB.jpg')
+    # o = Text('Bonjour les', np.array([-0.8, 0.3], np.float32), np.array(
+    #     [0.8, 0.8], np.float32), vao, 2, programGUI_id, texture)
+    # viewer.add_object(o)
+    # o = Text('3ETI', np.array([-0.5, -0.2], np.float32),
+    #          np.array([0.5, 0.3], np.float32), vao, 2, programGUI_id, texture)
+    # viewer.add_object(o)
 
     viewer.run()
 
