@@ -34,20 +34,24 @@ class ViewerGL:
         self.touch = {}
 
         self.lock_cam = True
+        self.pause = False
 
     def run(self):
         # boucle d'affichage
         while not glfw.window_should_close(self.window):
             # nettoyage de la fenêtre : fond et profondeur
             GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
-
-            self.update_key()
-
-            for obj in self.objs:
-                GL.glUseProgram(obj.program)
-                if isinstance(obj, Object3D):
-                    self.update_camera(obj.program)
-                obj.draw()
+            if not self.pause:
+                GL.glClearColor(0.5, 0.6, 0.9, 1.0)
+                for obj in self.objs:
+                    GL.glUseProgram(obj.program)
+                    if isinstance(obj, Object3D):
+                        self.update_camera(obj.program)
+                    obj.draw()
+                self.update_key()
+            else:
+                GL.glClearColor(0.2, 0.2, 0.2, 0.5)
+                self.text_pause.draw()
 
             # changement de buffer d'affichage pour éviter un effet de scintillement
             glfw.swap_buffers(self.window)
@@ -58,7 +62,16 @@ class ViewerGL:
         # sortie du programme si appui sur la touche 'échappement'
         if key == glfw.KEY_ESCAPE and action == glfw.PRESS:
             glfw.set_window_should_close(win, glfw.TRUE)
-        self.touch[key] = action
+
+        if key == glfw.KEY_C and action == glfw.PRESS:
+            self.lock_cam = not self.lock_cam
+
+        if key == glfw.KEY_P and action == glfw.PRESS:
+            self.pause = not self.pause
+
+        else:
+            if not self.pause:
+                self.touch[key] = action
 
     def add_object(self, obj):
         self.objs.append(obj)
@@ -115,19 +128,16 @@ class ViewerGL:
 
         if glfw.KEY_I in self.touch and self.touch[glfw.KEY_I] > 0:
             self.cam.transformation.rotation_euler[pyrr.euler.index(
-            ).roll] -= 0.1
+            ).roll] -= 0.04
         if glfw.KEY_K in self.touch and self.touch[glfw.KEY_K] > 0:
             self.cam.transformation.rotation_euler[pyrr.euler.index(
-            ).roll] += 0.1
+            ).roll] += 0.04
         if glfw.KEY_J in self.touch and self.touch[glfw.KEY_J] > 0:
             self.cam.transformation.rotation_euler[pyrr.euler.index(
-            ).yaw] -= 0.1
+            ).yaw] -= 0.04
         if glfw.KEY_L in self.touch and self.touch[glfw.KEY_L] > 0:
             self.cam.transformation.rotation_euler[pyrr.euler.index(
-            ).yaw] += 0.1
-
-        if glfw.KEY_C in self.touch and self.touch[glfw.KEY_C] > 0:
-            self.lock_cam = not self.lock_cam
+            ).yaw] += 0.04
 
         if self.lock_cam:
             self.cam.transformation.rotation_euler = self.objs[0].transformation.rotation_euler.copy(
@@ -138,4 +148,4 @@ class ViewerGL:
                 self.objs[0].transformation.rotation_center
             # on peut choisir l'offset lorsque l'on suit l'objet
             self.cam.transformation.translation = self.objs[0].transformation.translation + pyrr.Vector3([
-                                                                                                            0, 0.75, 2.556])
+                0, 0.75, 2.556])
