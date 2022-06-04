@@ -74,6 +74,7 @@ def main():
     texture = glutils.load_texture('Textures/fontB.jpg')
     text_pause = Text('Pause', np.array([-0.8, 0.3], np.float32), np.array(
         [0.8, 0.8], np.float32), vao, 2, programGUI_id, texture)
+    # On cree un attribut
     viewer.text_pause = text_pause
     # o = Text('3ETI', np.array([-0.5, -0.2], np.float32),
     #          np.array([0.5, 0.3], np.float32), vao, 2, programGUI_id, texture)
