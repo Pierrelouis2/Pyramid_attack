@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from sre_constants import JUMP
 import OpenGL.GL as GL
 import glfw
 import pyrr
@@ -36,23 +37,23 @@ class ViewerGL:
         self.lock_cam = True
         self.pause = False
 
-        self.jumping_force = 30000
+        # pour faire un saut de 1 metre: (voir jumpforce.py)
+        self.jumping_force = 19910
         self.bool_jumping = False
-        self.start = glfw.get_time()
         self.delta_posX = 0.02
         self.gravity = -9.81
         self.weight = 75
         self.accelerationY = self.gravity
         self.velocityY = 0
-        self.dt = 0
+        # on part du principe qu'on a 60 fps
+        self.dt = 0.01667
 
     def run(self):
         # boucle d'affichage
+        self.start = glfw.get_time()
         while not glfw.window_should_close(self.window):
             # nettoyage de la fenêtre : fond et profondeur
             GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
-            self.dt = glfw.get_time() - self.start
-            self.start = glfw.get_time()
             if not self.pause:
                 GL.glClearColor(0.5, 0.6, 0.9, 1.0)
                 for obj in self.objs:
@@ -171,7 +172,7 @@ class ViewerGL:
                 0, 0.75, 2.556])
 
     def jump(self):
-        #TODO pk le premier jump va plus haut ?
+        # TODO pk le premier jump va plus haut ?
         self.velocityY += self.accelerationY * self.dt
         # condition a revoir
         if self.objs[0].transformation.translation.y + self.velocityY * self.dt < 0.5:
@@ -179,5 +180,5 @@ class ViewerGL:
             self.bool_jumping = False
         self.objs[0].transformation.translation += \
             pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(
-                self.objs[0].transformation.rotation_euler), pyrr.Vector3([0, self.velocityY*self.dt, 0]))
+                self.objs[0].transformation.rotation_euler), pyrr.Vector3([0, self.velocityY * self.dt, 0]))
         self.accelerationY = self.gravity
