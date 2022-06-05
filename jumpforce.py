@@ -42,7 +42,8 @@ if case == "force":
 
 if case == "temps":
     positions = [0]
-    jump_force = 19910  # peut etre modifier
+    # jump_force doit etre modifier en fct du saut voulue (choisi avec le graphe des forces)
+    jump_force = 19910
     acceleration = (jump_force + jump_force_offset)/masse + gravity_obj
     vitesse += acceleration * dt
     print(vitesse)
