@@ -28,7 +28,7 @@ def main() :
     humain.create()
     viewer.humain_class = humain
 #Spawn Pyramide
-    nbr_pyramide = 1
+    nbr_pyramide = 10
     lst_pyramide = []
     rayon = 10
     for i in range(nbr_pyramide) :
