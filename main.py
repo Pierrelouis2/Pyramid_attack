@@ -6,8 +6,9 @@ import numpy as np
 import OpenGL.GL as GL
 import pyrr
 import random as rand
-from Pyramid import *
+from pyramid import *
 from Entity import *
+
 
 def main():
     viewer = ViewerGL()
@@ -38,7 +39,7 @@ def main():
 
  # Pyramide
    # m = Mesh.load_obj('Textures/pyramid-simple-design.obj')
-    #m.normalize()
+    # m.normalize()
     # Taille de la pyramide
     #m.apply_matrix(pyrr.matrix44.create_from_scale([0.25, 0.25, 0.25, 1]))
     #tr = Transformation3D()
@@ -53,26 +54,20 @@ def main():
     #tr.rotation_center.z = 0
     #texture = glutils.load_texture('Textures/architecture.jpg')
 
-    #o = Object3D(m.load_to_gpu(), m.get_nb_triangles(),
-                 #program3d_id, texture, tr)
-    #viewer.add_object(o)
+    # o = Object3D(m.load_to_gpu(), m.get_nb_triangles(),
+    # program3d_id, texture, tr)
+    # viewer.add_object(o)
     nbr_pyramide = 6
     lst_pyramide = []
     rayon = 10
-    for i in range(nbr_pyramide) :
-        teta = rand.randint(0,10)
-        pyramide = Pyramid(vie=1,coord=[rayon * math.cos(teta),0,rayon * math.sin(teta)],rot=[0,0,0],obj="Textures/pyramid-simple-design.obj",
-            texture="Textures/architecture.jpg",scale=[0.25, 0.25, 0.25, 1],viewer=viewer,program3d_id=program3d_id)
+    for i in range(nbr_pyramide):
+        teta = rand.randint(0, 10)
+        pyramide = Pyramid(vie=1, coord=[rayon * math.cos(teta), 0, rayon * math.sin(teta)], rot=[0, 0, 0], obj="Textures/pyramid-simple-design.obj",
+                           texture="Textures/architecture.jpg", scale=[0.25, 0.25, 0.25, 1], viewer=viewer, program3d_id=program3d_id)
 
         lst_pyramide.append(pyramide)
         pyramide.create()
     print(len(lst_pyramide))
-        
-
-
-
-
-
 
     # Sol
     m = Mesh()

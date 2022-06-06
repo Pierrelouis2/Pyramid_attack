@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from re import X
 from sre_constants import JUMP
 import OpenGL.GL as GL
 import glfw
@@ -40,7 +41,7 @@ class ViewerGL:
         # pour faire un saut de 1 metre: (voir jumpforce.py)
         self.jumping_force = 19910
         self.bool_jumping = False
-        self.delta_posX = 0.02
+        self.delta_posX = 0.2
         self.gravity = -9.81
         self.weight = 75
         self.accelerationY = self.gravity
@@ -66,8 +67,7 @@ class ViewerGL:
                 GL.glClearColor(0.2, 0.2, 0.2, 0.5)
                 self.text_pause.draw()
 
-            if self.bool_jumping:
-                self.jump()
+            self.gravitation()
 
             # changement de buffer d'affichage pour éviter un effet de scintillement
             glfw.swap_buffers(self.window)
@@ -75,6 +75,7 @@ class ViewerGL:
             glfw.poll_events()
 
     def key_callback(self, win, key, scancode, action, mods):
+        self.win = win
         # sortie du programme si appui sur la touche 'échappement'
         if key == glfw.KEY_ESCAPE and action == glfw.PRESS:
             glfw.set_window_should_close(win, glfw.TRUE)
@@ -171,13 +172,18 @@ class ViewerGL:
             self.cam.transformation.translation = self.objs[0].transformation.translation + pyrr.Vector3([
                 0, 0.75, 2.556])
 
-    def jump(self):
-        # TODO pk le premier jump va plus haut ?
+    def gravitation(self):
+        # TODO pk le premier jump  va plus haut ?
         self.velocityY += self.accelerationY * self.dt
         # condition a revoir
-        if self.objs[0].transformation.translation.y + self.velocityY * self.dt < 0.5:
+
+        X = self.objs[0].transformation.translation.x
+        Z = self.objs[0].transformation.translation.z
+        if self.objs[0].transformation.translation.y + self.velocityY * self.dt < 0.5 and not (X > 25 or X < -25) and not (Z > 25 or Z < -25):
             self.velocityY = 0
             self.bool_jumping = False
+        if self.objs[0].transformation.translation.y < -20:
+            glfw.set_window_should_close(self.win, glfw.TRUE)
         self.objs[0].transformation.translation += \
             pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(
                 self.objs[0].transformation.rotation_euler), pyrr.Vector3([0, self.velocityY * self.dt, 0]))
