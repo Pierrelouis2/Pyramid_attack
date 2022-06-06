@@ -7,7 +7,7 @@ class Pyramid(Entity.Entity):
     def mouvement(self,humain) :
         
         vect =[humain.object.transformation.translation.x - self.object.transformation.translation.x,0,humain.object.transformation.translation.z  - self.object.transformation.translation.z]
-        norm = math.roots(vect[0]*vect[0] + vect[2]*vect[2])
+        norm = math.sqrt(vect[0]*vect[0] + vect[2]*vect[2])
         vect_norm = [i/norm for i in vect]
         mov = [i*0.005 for i in vect_norm]
         print(sum(vect_norm))
