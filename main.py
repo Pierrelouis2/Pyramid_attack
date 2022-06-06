@@ -10,6 +10,7 @@ from Pyramid import *
 from Entity import *
 from Humain import *
 
+
 def main():
     viewer = ViewerGL()
 

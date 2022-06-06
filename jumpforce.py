@@ -3,7 +3,7 @@ from matplotlib import pyplot as plt
 
 
 # -----Quel tableau choisir temps ou force: ----------------------
-case = "temps"
+case = "force"
 jump_force = 1000  # precision (en kg.m.s-2)
 jump_force_offset = 0
 
