@@ -11,8 +11,7 @@ import Humain
 import math
 import pymeshlab as mlab
 
-
-def main():
+def main() :
     viewer = ViewerGL()
 
     # Cam
@@ -28,17 +27,19 @@ def main():
     humain = Humain.Humain(vie=1, coord=[0, 0, 0], rot=[0, 0, 0], obj='Textures/homme.obj',
                            texture='Textures/multicolor.png', scale=[0.5, 0.5, 0.5, 1], viewer=viewer, program3d_id=program3d_id, name="humain")
     humain.create()
-    viewer.humain = humain
+    viewer.humain_class = humain
 
-    # ms = mlab.MeshSet()
-    # ms.load_new_mesh(humain.obj)
-    # bbox_humain = ms.current_mesh().bounding_box()
+    ms = mlab.MeshSet()
+    ms.load_new_mesh(humain.obj)
+    boundingbox =  ms.current_mesh().bounding_box()
+    print(boundingbox.diagonal())
 
-    # print(bbox_humain.dim_x())
+    
 
 
-# Spawn Pyramide
-    nbr_pyramide = 10
+
+#Spawn Pyramide
+    nbr_pyramide = 1
     lst_pyramide = []
     rayon = 10
     for i in range(nbr_pyramide):
