@@ -10,6 +10,8 @@ import Entity
 import Humain
 import math
 
+import pymeshlab as mlab
+
 def main() :
     viewer = ViewerGL()
 
@@ -27,6 +29,16 @@ def main() :
             texture='Textures/multicolor.png',scale=[0.5, 0.5, 0.5, 1],viewer=viewer,program3d_id=program3d_id,name="humain")
     humain.create()
     viewer.humain_class = humain
+
+    ms = mlab.MeshSet()
+    ms.load_new_mesh(humain.obj)
+    boundingbox =  ms.current_mesh().bounding_box()
+    print(boundingbox.diagonal())
+
+    
+
+
+
 #Spawn Pyramide
     nbr_pyramide = 1
     lst_pyramide = []
@@ -38,6 +50,7 @@ def main() :
         lst_pyramide.append(pyramide)
         pyramide.create()
         viewer.lst_pyramide = lst_pyramide
+        
         
 
 
