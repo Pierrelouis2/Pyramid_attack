@@ -32,6 +32,8 @@ class ViewerGL:
         print(f"OpenGL: {GL.glGetString(GL.GL_VERSION).decode('ascii')}")
 
         self.objs = []
+        self.objs_pyramide = []
+        self.objs_projectile = []
         self.touch = {}
 
         self.lock_cam = True
@@ -46,11 +48,21 @@ class ViewerGL:
         self.accelerationY = self.gravity
         self.velocityY = 0
         # on part du principe qu'on a 60 fps
-        self.dt = 0.01667
+        self.dt = 1/60
+
+
+
+
+
+
+
+
+
+
+
 
     def run(self):
         # boucle d'affichage
-        self.start = glfw.get_time()
         while not glfw.window_should_close(self.window):
             # nettoyage de la fenêtre : fond et profondeur
             GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
@@ -91,6 +103,14 @@ class ViewerGL:
 
     def add_object(self, obj):
         self.objs.append(obj)
+
+    def add_object_pyamide(self, obj):
+        self.objs_pyramide.append(obj)
+
+    def add_object_projectile(self, obj):
+        self.objs_projectile.append(obj)
+    def add_object_humain(self, obj):
+        self.humain = obj
 
     def set_camera(self, cam):
         self.cam = cam

@@ -8,6 +8,7 @@ import pyrr
 import random as rand
 from Pyramid import *
 from Entity import *
+from Humain import *
 
 def main():
     viewer = ViewerGL()
@@ -21,54 +22,26 @@ def main():
         'vert/shader.vert', 'frag/shader.frag')
     programGUI_id = glutils.create_program_from_file(
         'vert/gui.vert', 'frag/gui.frag')
-
     # humain
-    m = Mesh.load_obj('Textures/homme.obj')
-    m.normalize()
-    # Taille de la pyramide
-    m.apply_matrix(pyrr.matrix44.create_from_scale([0.5, 0.5, 0.5, 1]))
-    tr = Transformation3D()
-    tr.translation.y = -np.amin(m.vertices, axis=0)[1]
-    tr.translation.z = -5
-    tr.rotation_center.z = 0
-    texture = glutils.load_texture('Textures/multicolor.png')
-    o = Object3D(m.load_to_gpu(), m.get_nb_triangles(),
-                 program3d_id, texture, tr)
-    viewer.add_object(o)
+    humain = Humain(vie=1,coord=[0,0,0],rot=[0,0,0],obj='Textures/homme.obj',
+            texture='Textures/multicolor.png',scale=[0.5, 0.5, 0.5, 1],viewer=viewer,program3d_id=program3d_id,name="humain")
+    humain.create()
 
- # Pyramide
-   # m = Mesh.load_obj('Textures/pyramid-simple-design.obj')
-    #m.normalize()
-    # Taille de la pyramide
-    #m.apply_matrix(pyrr.matrix44.create_from_scale([0.25, 0.25, 0.25, 1]))
-    #tr = Transformation3D()
-    #tr.translation.y = -np.amin(m.vertices, axis=0)[1]
-    # spawn des pyramide de maniere circulaire
-
-    # for i in range(nbr_pyramide) :
-    #     teta = rand.randint(0,10)
-    #     x = 10 * math.cos(teta)
-
-    #tr.translation.z = -10
-    #tr.rotation_center.z = 0
-    #texture = glutils.load_texture('Textures/architecture.jpg')
-
-    #o = Object3D(m.load_to_gpu(), m.get_nb_triangles(),
-                 #program3d_id, texture, tr)
-    #viewer.add_object(o)
+#Spawn Pyramide
     nbr_pyramide = 6
     lst_pyramide = []
     rayon = 10
     for i in range(nbr_pyramide) :
         teta = rand.randint(0,10)
         pyramide = Pyramid(vie=1,coord=[rayon * math.cos(teta),0,rayon * math.sin(teta)],rot=[0,0,0],obj="Textures/pyramid-simple-design.obj",
-            texture="Textures/architecture.jpg",scale=[0.25, 0.25, 0.25, 1],viewer=viewer,program3d_id=program3d_id)
-
+            texture="Textures/architecture.jpg",scale=[0.25, 0.25, 0.25, 1],viewer=viewer,program3d_id=program3d_id,name="pyramide")
         lst_pyramide.append(pyramide)
         pyramide.create()
-    print(len(lst_pyramide))
+        viewer.lst_pyramide = lst_pyramide
         
-
+#mouvement pyramide
+   # for j in lst_pyramide :
+   #     j.mouvement(humain = )
 
 
 

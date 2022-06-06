@@ -12,7 +12,7 @@ class Entity()   :
     Description:
     cree la base de chaque pyramide ou joueur
     """
-    def __init__(self,vie,coord,rot,obj,texture,scale,viewer,program3d_id) :
+    def __init__(self,vie,coord,rot,obj,texture,scale,viewer,program3d_id,name) :
         self.coord = coord #position de l'entité au début [x,y,z]
         self.rot = rot #rotation de l'entité
         self.life = vie #vie de l'entité
@@ -22,6 +22,7 @@ class Entity()   :
         self.liste_projectile = []
         self.viewer = viewer
         self.program3d_id = program3d_id
+        self.name = name
 
     def create(self):
         """
@@ -47,3 +48,9 @@ class Entity()   :
         o = Object3D(m.load_to_gpu(), m.get_nb_triangles(),
                     self.program3d_id, texture, tr)
         self.viewer.add_object(o)
+        if self.name == "pyramide":
+            self.viewer.add_object_pyamide(o)
+        if self.name == "projectile" :
+            self.viewer.add_object_projectile(o)
+        if self.name == "humain" :
+            self.viewer.add_object_humain(o)
