@@ -1,6 +1,6 @@
 from viewerGL import ViewerGL
 import glutils
-from mesh import Mesh
+import mesh
 from cpe3d import Object3D, Camera, Transformation3D, Text
 import numpy as np
 import OpenGL.GL as GL
@@ -9,8 +9,10 @@ import Pyramid
 import Entity
 import Humain
 import math
+import pymeshlab as mlab
 
-def main() :
+
+def main():
     viewer = ViewerGL()
 
     # Cam
@@ -23,26 +25,32 @@ def main() :
     programGUI_id = glutils.create_program_from_file(
         'vert/gui.vert', 'frag/gui.frag')
     # humain
-    humain = Humain.Humain(vie=1,coord=[0,0,0],rot=[0,0,0],obj='Textures/homme.obj',
-            texture='Textures/multicolor.png',scale=[0.5, 0.5, 0.5, 1],viewer=viewer,program3d_id=program3d_id,name="humain")
+    humain = Humain.Humain(vie=1, coord=[0, 0, 0], rot=[0, 0, 0], obj='Textures/homme.obj',
+                           texture='Textures/multicolor.png', scale=[0.5, 0.5, 0.5, 1], viewer=viewer, program3d_id=program3d_id, name="humain")
     humain.create()
-    viewer.humain_class = humain
-#Spawn Pyramide
+    viewer.humain = humain
+
+    # ms = mlab.MeshSet()
+    # ms.load_new_mesh(humain.obj)
+    # bbox_humain = ms.current_mesh().bounding_box()
+
+    # print(bbox_humain.dim_x())
+
+
+# Spawn Pyramide
     nbr_pyramide = 10
     lst_pyramide = []
     rayon = 10
-    for i in range(nbr_pyramide) :
-        teta = rand.randint(0,10)
-        pyramide = Pyramid.Pyramid(vie=1,coord=[rayon * math.cos(teta),0,rayon * math.sin(teta)],rot=[0,0,0],obj="Textures/pyramid-simple-design.obj",
-            texture="Textures/architecture.jpg",scale=[0.25, 0.25, 0.25, 1],viewer=viewer,program3d_id=program3d_id,name="pyramide")
+    for i in range(nbr_pyramide):
+        teta = rand.randint(0, 10)
+        pyramide = Pyramid.Pyramid(vie=1, coord=[rayon * math.cos(teta), 0, rayon * math.sin(teta)], rot=[0, 0, 0], obj="Textures/pyramid-simple-design.obj",
+                                   texture="Textures/architecture.jpg", scale=[0.25, 0.25, 0.25, 1], viewer=viewer, program3d_id=program3d_id, name="pyramide")
         lst_pyramide.append(pyramide)
         pyramide.create()
         viewer.lst_pyramide = lst_pyramide
-        
-
 
     # Sol
-    m = Mesh()
+    m = mesh.Mesh()
     p0, p1, p2, p3 = [-25, 0, -25], [25, 0, -25], [25, 0, 25], [-25, 0, 25]
     n, c = [0, 1, 0], [1, 1, 1]
     t0, t1, t2, t3 = [0, 0], [1, 0], [1, 1], [0, 1]

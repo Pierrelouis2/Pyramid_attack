@@ -8,6 +8,7 @@ import pyrr
 import numpy as np
 from cpe3d import Object3D
 import Pyramid
+import pymeshlab as mlab
 
 
 class ViewerGL:
@@ -65,7 +66,7 @@ class ViewerGL:
                         self.update_camera(obj.program)
                     obj.draw()
                 for i in self.lst_pyramide:
-                    i.mouvement(self.humain_class)
+                    i.mouvement(self.humain)
                 self.update_key()
 
                 self.gravitation()
@@ -103,9 +104,6 @@ class ViewerGL:
 
     def add_object_projectile(self, obj):
         self.objs_projectile.append(obj)
-
-    def add_object_humain(self, obj):
-        self.humain = obj
 
     def set_camera(self, cam):
         self.cam = cam
@@ -206,3 +204,5 @@ class ViewerGL:
             pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(
                 self.objs[0].transformation.rotation_euler), pyrr.Vector3([0, self.velocityY * self.dt, 0]))
         self.accelerationY = self.gravity
+
+        
