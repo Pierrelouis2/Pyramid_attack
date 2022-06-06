@@ -9,6 +9,7 @@ import numpy as np
 from cpe3d import Object3D
 import Pyramid
 
+
 class ViewerGL:
     def __init__(self):
         # initialisation de la librairie GLFW
@@ -63,7 +64,7 @@ class ViewerGL:
                     if isinstance(obj, Object3D):
                         self.update_camera(obj.program)
                     obj.draw()
-                for i in self.lst_pyramide :
+                for i in self.lst_pyramide:
                     i.mouvement(self.humain_class)
                 self.update_key()
 
@@ -191,8 +192,10 @@ class ViewerGL:
         # condition a revoir
 
         X = self.objs[0].transformation.translation.x
+        Y = self.objs[0].transformation.translation.y
         Z = self.objs[0].transformation.translation.z
-        if self.objs[0].transformation.translation.y + self.velocityY * self.dt < 0.5 and not (X > 25 or X < -25) and not (Z > 25 or Z < -25):
+
+        if self.objs[0].transformation.translation.y + self.velocityY * self.dt < 0.5 and not (X > 25 or X < -25) and not (Z > 25 or Z < -25) and Y > -0.5:
             self.velocityY = 0
             self.bool_jumping = False
         if self.objs[0].transformation.translation.y < -10:

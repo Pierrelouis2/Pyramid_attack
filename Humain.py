@@ -6,6 +6,7 @@ from Entity import *
 import math
 import random as rand
 
+
 class Humain(Entity):
     def test(self):
         pass
