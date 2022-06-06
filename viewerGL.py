@@ -51,17 +51,6 @@ class ViewerGL:
         # on part du principe qu'on a 60 fps
         self.dt = 1/60
 
-
-
-
-
-
-
-
-
-
-
-
     def run(self):
         # boucle d'affichage
         while not glfw.window_should_close(self.window):
@@ -75,11 +64,12 @@ class ViewerGL:
                         self.update_camera(obj.program)
                     obj.draw()
                 self.update_key()
+
+                self.gravitation()
+
             else:
                 GL.glClearColor(0.2, 0.2, 0.2, 0.5)
                 self.text_pause.draw()
-
-            self.gravitation()
 
             # changement de buffer d'affichage pour éviter un effet de scintillement
             glfw.swap_buffers(self.window)
@@ -110,6 +100,7 @@ class ViewerGL:
 
     def add_object_projectile(self, obj):
         self.objs_projectile.append(obj)
+
     def add_object_humain(self, obj):
         self.humain = obj
 
@@ -193,7 +184,7 @@ class ViewerGL:
                 0, 0.75, 2.556])
 
     def gravitation(self):
-        # TODO pk le premier jump  va plus haut ?
+        # TODO Faire autre chose que quitter la fct
         self.velocityY += self.accelerationY * self.dt
         # condition a revoir
 
@@ -202,8 +193,10 @@ class ViewerGL:
         if self.objs[0].transformation.translation.y + self.velocityY * self.dt < 0.5 and not (X > 25 or X < -25) and not (Z > 25 or Z < -25):
             self.velocityY = 0
             self.bool_jumping = False
-        if self.objs[0].transformation.translation.y < -20:
-            glfw.set_window_should_close(self.win, glfw.TRUE)
+        if self.objs[0].transformation.translation.y < -10:
+            self.objs[0].transformation.translation.x = 0
+            self.objs[0].transformation.translation.y = 0.75
+            self.objs[0].transformation.translation.z = 0
         self.objs[0].transformation.translation += \
             pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(
                 self.objs[0].transformation.rotation_euler), pyrr.Vector3([0, self.velocityY * self.dt, 0]))
