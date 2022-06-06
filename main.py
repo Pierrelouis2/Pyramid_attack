@@ -4,14 +4,13 @@ from mesh import Mesh
 from cpe3d import Object3D, Camera, Transformation3D, Text
 import numpy as np
 import OpenGL.GL as GL
-import pyrr
 import random as rand
-from Pyramid import *
-from Entity import *
-from Humain import *
+import Pyramid
+import Entity
+import Humain
+import math
 
-
-def main():
+def main() :
     viewer = ViewerGL()
 
     # Cam
@@ -24,28 +23,22 @@ def main():
     programGUI_id = glutils.create_program_from_file(
         'vert/gui.vert', 'frag/gui.frag')
     # humain
-    humain = Humain(vie=1,coord=[0,0,0],rot=[0,0,0],obj='Textures/homme.obj',
+    humain = Humain.Humain(vie=1,coord=[0,0,0],rot=[0,0,0],obj='Textures/homme.obj',
             texture='Textures/multicolor.png',scale=[0.5, 0.5, 0.5, 1],viewer=viewer,program3d_id=program3d_id,name="humain")
     humain.create()
-
+    viewer.humain_class = humain
 #Spawn Pyramide
-    nbr_pyramide = 6
+    nbr_pyramide = 1
     lst_pyramide = []
     rayon = 10
     for i in range(nbr_pyramide) :
         teta = rand.randint(0,10)
-        pyramide = Pyramid(vie=1,coord=[rayon * math.cos(teta),0,rayon * math.sin(teta)],rot=[0,0,0],obj="Textures/pyramid-simple-design.obj",
+        pyramide = Pyramid.Pyramid(vie=1,coord=[rayon * math.cos(teta),0,rayon * math.sin(teta)],rot=[0,0,0],obj="Textures/pyramid-simple-design.obj",
             texture="Textures/architecture.jpg",scale=[0.25, 0.25, 0.25, 1],viewer=viewer,program3d_id=program3d_id,name="pyramide")
         lst_pyramide.append(pyramide)
         pyramide.create()
         viewer.lst_pyramide = lst_pyramide
         
-#mouvement pyramide
-   # for j in lst_pyramide :
-   #     j.mouvement(humain = )
-
-
-
 
 
     # Sol

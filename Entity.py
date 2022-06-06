@@ -1,4 +1,4 @@
-from viewerGL import ViewerGL
+
 import glutils
 from mesh import Mesh
 from cpe3d import Object3D, Camera, Transformation3D, Text
@@ -23,6 +23,8 @@ class Entity()   :
         self.viewer = viewer
         self.program3d_id = program3d_id
         self.name = name
+        self.object = None
+
 
     def create(self):
         """
@@ -45,12 +47,12 @@ class Entity()   :
         tr.rotation_center.z = self.rot[2]
         texture = glutils.load_texture(self.texture)
 
-        o = Object3D(m.load_to_gpu(), m.get_nb_triangles(),
+        self.object = Object3D(m.load_to_gpu(), m.get_nb_triangles(),
                     self.program3d_id, texture, tr)
-        self.viewer.add_object(o)
+        self.viewer.add_object(self.object)
         if self.name == "pyramide":
-            self.viewer.add_object_pyamide(o)
+            self.viewer.add_object_pyamide(self.object)
         if self.name == "projectile" :
-            self.viewer.add_object_projectile(o)
+            self.viewer.add_object_projectile(self.object)
         if self.name == "humain" :
-            self.viewer.add_object_humain(o)
+            self.viewer.add_object_humain(self.object)

@@ -7,7 +7,7 @@ import glfw
 import pyrr
 import numpy as np
 from cpe3d import Object3D
-
+import Pyramid
 
 class ViewerGL:
     def __init__(self):
@@ -74,7 +74,10 @@ class ViewerGL:
                     if isinstance(obj, Object3D):
                         self.update_camera(obj.program)
                     obj.draw()
+                for i in self.lst_pyramide :
+                    i.mouvement(self.humain_class)
                 self.update_key()
+
             else:
                 GL.glClearColor(0.2, 0.2, 0.2, 0.5)
                 self.text_pause.draw()
