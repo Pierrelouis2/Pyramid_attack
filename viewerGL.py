@@ -248,11 +248,10 @@ class ViewerGL:
         proj.create()
         proj.object.transformation.translation.y += self.objs_humain.object.transformation.translation.y +0.1
         proj.object.transformation.rotation_euler[pyrr.euler.index().yaw] = self.objs_humain.object.transformation.rotation_euler[pyrr.euler.index().yaw] + math.pi/2
-        proj.object.transformation.rotation_euler[pyrr.euler.index().roll] = self.cam.transformation.rotation_euler[pyrr.euler.index().roll]
+        proj.object.transformation.rotation_euler[pyrr.euler.index().roll] = -self.cam.transformation.rotation_euler[pyrr.euler.index().roll]
         self.objs_projectile.append(proj)
 
     def update_line(self):
         self.line.object.transformation.translation = self.objs_humain.object.transformation.translation + 0.1
-        # self.line.object.transformation.rotation_euler[pyrr.euler.index().yaw] = self.objs_humain.object.transformation.rotation_euler[pyrr.euler.index().yaw]
-        # self.line.object.transformation.rotation_euler[pyrr.euler.index().roll] = self.cam.transformation.rotation_euler[pyrr.euler.index().roll]
-        #self.line.object.transformation.rotation_euler = self.cam.transformation.rotation_euler
+        self.line.object.transformation.rotation_euler[pyrr.euler.index().yaw] = self.objs_humain.object.transformation.rotation_euler[pyrr.euler.index().yaw]
+        self.line.object.transformation.rotation_euler[pyrr.euler.index().roll] = -self.cam.transformation.rotation_euler[pyrr.euler.index().roll]
