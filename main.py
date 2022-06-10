@@ -9,9 +9,7 @@ import Pyramid
 import Entity
 import Humain
 import math
-import pymeshlab as mlab
 import pyrr
-
 
 def main():
     viewer = ViewerGL()
@@ -84,10 +82,10 @@ def main():
     # Text Pause
     vao_obj = Text.initalize_geometry()
     texture = glutils.load_texture('Textures/fontB.jpg')
-    text_pause = Text('Pause', np.array([-0.8, 0.3], np.float32), np.array(
-        [0.8, 0.8], np.float32), vao_obj, 2, programGUI_id, texture)
-    # On cree un attribut
+    text_pause = Text('Pause', np.array([-0.8, 0.3], np.float32), np.array([0.8, 0.8], np.float32), vao_obj, 2, programGUI_id, texture)
     viewer.text_pause = text_pause
+
+
     viewer.run()
 
 
