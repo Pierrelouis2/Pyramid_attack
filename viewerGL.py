@@ -160,6 +160,7 @@ class ViewerGL:
             self.objs[0].transformation.translation += \
                 pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(
                     self.objs[0].transformation.rotation_euler), pyrr.Vector3([0, 0, self.delta_posX]))
+
         if glfw.KEY_DOWN in self.touch and self.touch[glfw.KEY_DOWN] > 0:
             self.objs[0].transformation.translation -= \
                 pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(
@@ -185,12 +186,12 @@ class ViewerGL:
         if glfw.KEY_L in self.touch and self.touch[glfw.KEY_L] > 0:
             self.cam.transformation.rotation_euler[pyrr.euler.index().yaw] += 0.02
 
-        # if self.lock_cam:
+        if self.lock_cam:
         #     self.cam.transformation.rotation_euler = self.objs[0].transformation.rotation_euler.copy()
-        #     self.cam.transformation.rotation_euler[pyrr.euler.index().yaw] += np.pi
-        #     self.cam.transformation.rotation_center = self.objs[0].transformation.translation + self.objs[0].transformation.rotation_center
-        #     # on peut choisir l'offset lorsque l'on suit l'objet
-        #     self.cam.transformation.translation = self.objs[0].transformation.translation + pyrr.Vector3([0, 0.75, 2.556])
+        #    self.cam.transformation.rotation_euler[pyrr.euler.index().yaw] += np.pi
+            self.cam.transformation.rotation_center = self.objs[0].transformation.translation + self.objs[0].transformation.rotation_center
+            # on peut choisir l'offset lorsque l'on suit l'objet
+            self.cam.transformation.translation = self.objs[0].transformation.translation + pyrr.Vector3([0, 0.75, 2.556])
 
         if glfw.KEY_X in self.touch and self.touch[glfw.KEY_X]> 0 :
             self.shoot()
