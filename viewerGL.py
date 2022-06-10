@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
 
+from re import X
+from sre_constants import JUMP
 import OpenGL.GL as GL
 import glfw
 import pyrr
 import numpy as np
 from cpe3d import Object3D
+import Pyramid
+import pymeshlab as mlab
 
-
+ 
 class ViewerGL:
     def __init__(self):
         # initialisation de la librairie GLFW
@@ -31,21 +35,45 @@ class ViewerGL:
         print(f"OpenGL: {GL.glGetString(GL.GL_VERSION).decode('ascii')}")
 
         self.objs = []
+        self.objs_pyramide = []
+        self.objs_projectile = []
         self.touch = {}
+
+        self.lock_cam = True
+        self.pause = False
+
+        # pour faire un saut de 1 metre: (voir jumpforce.py)
+        self.jumping_force = 19910
+        self.bool_jumping = False
+        self.delta_posX = 0.2
+        self.gravity = -9.81
+        self.weight = 75
+        self.accelerationY = self.gravity
+        self.velocityY = 0
+        # on part du principe qu'on a 60 fps
+        self.dt = 1/60
 
     def run(self):
         # boucle d'affichage
         while not glfw.window_should_close(self.window):
             # nettoyage de la fenêtre : fond et profondeur
             GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
+            if not self.pause:
+                GL.glClearColor(0.5, 0.6, 0.9, 1.0)
+                for obj in self.objs:
+                    GL.glUseProgram(obj.program)
+                    if isinstance(obj, Object3D):
+                        self.update_camera(obj.program)
+                    obj.draw()
+                for i in self.lst_pyramide:
+                    i.mouvement(self.humain)
+                self.update_key()
 
-            self.update_key()
+                self.gravitation()
 
-            for obj in self.objs:
-                GL.glUseProgram(obj.program)
-                if isinstance(obj, Object3D):
-                    self.update_camera(obj.program)
-                obj.draw()
+            else:
+                GL.glClearColor(0.2, 0.2, 0.2, 0.5)
+                self.text_pause.draw()
 
             # changement de buffer d'affichage pour éviter un effet de scintillement
             glfw.swap_buffers(self.window)
@@ -53,13 +81,29 @@ class ViewerGL:
             glfw.poll_events()
 
     def key_callback(self, win, key, scancode, action, mods):
+        self.win = win
         # sortie du programme si appui sur la touche 'échappement'
         if key == glfw.KEY_ESCAPE and action == glfw.PRESS:
             glfw.set_window_should_close(win, glfw.TRUE)
-        self.touch[key] = action
+
+        if key == glfw.KEY_C and action == glfw.PRESS:
+            self.lock_cam = not self.lock_cam
+
+        if key == glfw.KEY_P and action == glfw.PRESS:
+            self.pause = not self.pause
+
+        else:
+            if not self.pause:
+                self.touch[key] = action
 
     def add_object(self, obj):
         self.objs.append(obj)
+
+    def add_object_pyamide(self, obj):
+        self.objs_pyramide.append(obj)
+
+    def add_object_projectile(self, obj):
+        self.objs_projectile.append(obj)
 
     def set_camera(self, cam):
         self.cam = cam
@@ -101,30 +145,35 @@ class ViewerGL:
         if glfw.KEY_UP in self.touch and self.touch[glfw.KEY_UP] > 0:
             self.objs[0].transformation.translation += \
                 pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(
-                    self.objs[0].transformation.rotation_euler), pyrr.Vector3([0, 0, 0.02]))
+                    self.objs[0].transformation.rotation_euler), pyrr.Vector3([0, 0, self.delta_posX]))
         if glfw.KEY_DOWN in self.touch and self.touch[glfw.KEY_DOWN] > 0:
             self.objs[0].transformation.translation -= \
                 pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(
-                    self.objs[0].transformation.rotation_euler), pyrr.Vector3([0, 0, 0.02]))
+                    self.objs[0].transformation.rotation_euler), pyrr.Vector3([0, 0, self.delta_posX]))
         if glfw.KEY_LEFT in self.touch and self.touch[glfw.KEY_LEFT] > 0:
             self.objs[0].transformation.rotation_euler[pyrr.euler.index().yaw] -= 0.1
         if glfw.KEY_RIGHT in self.touch and self.touch[glfw.KEY_RIGHT] > 0:
             self.objs[0].transformation.rotation_euler[pyrr.euler.index().yaw] += 0.1
 
+        if glfw.KEY_SPACE in self.touch and self.touch[glfw.KEY_SPACE] > 0:
+            if not self.bool_jumping:
+                self.bool_jumping = True
+                self.accelerationY += self.jumping_force/self.weight
+
         if glfw.KEY_I in self.touch and self.touch[glfw.KEY_I] > 0:
             self.cam.transformation.rotation_euler[pyrr.euler.index(
-            ).roll] -= 0.1
+            ).roll] -= 0.02
         if glfw.KEY_K in self.touch and self.touch[glfw.KEY_K] > 0:
             self.cam.transformation.rotation_euler[pyrr.euler.index(
-            ).roll] += 0.1
+            ).roll] += 0.02
         if glfw.KEY_J in self.touch and self.touch[glfw.KEY_J] > 0:
             self.cam.transformation.rotation_euler[pyrr.euler.index(
-            ).yaw] -= 0.1
+            ).yaw] -= 0.02
         if glfw.KEY_L in self.touch and self.touch[glfw.KEY_L] > 0:
             self.cam.transformation.rotation_euler[pyrr.euler.index(
-            ).yaw] += 0.1
+            ).yaw] += 0.02
 
-        if glfw.KEY_SPACE in self.touch and self.touch[glfw.KEY_SPACE] > 0:
+        if self.lock_cam:
             self.cam.transformation.rotation_euler = self.objs[0].transformation.rotation_euler.copy(
             )
             self.cam.transformation.rotation_euler[pyrr.euler.index(
@@ -133,4 +182,25 @@ class ViewerGL:
                 self.objs[0].transformation.rotation_center
             # on peut choisir l'offset lorsque l'on suit l'objet
             self.cam.transformation.translation = self.objs[0].transformation.translation + pyrr.Vector3([
-                                                                                                         0, 0.75, 2.556])
+                0, 0.75, 2.556])
+
+    def gravitation(self):
+        # TODO Faire autre chose que quitter la fct
+        self.velocityY += self.accelerationY * self.dt
+        # condition a revoir
+
+        X = self.objs[0].transformation.translation.x
+        Y = self.objs[0].transformation.translation.y
+        Z = self.objs[0].transformation.translation.z
+
+        if self.objs[0].transformation.translation.y + self.velocityY * self.dt < 0.5 and not (X > 25 or X < -25) and not (Z > 25 or Z < -25) and Y > -0.5:
+            self.velocityY = 0
+            self.bool_jumping = False
+        if self.objs[0].transformation.translation.y < -10:
+            self.objs[0].transformation.translation.x = 0
+            self.objs[0].transformation.translation.y = 0.75
+            self.objs[0].transformation.translation.z = 0
+        self.objs[0].transformation.translation += \
+            pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(
+                self.objs[0].transformation.rotation_euler), pyrr.Vector3([0, self.velocityY * self.dt, 0]))
+        self.accelerationY = self.gravity
