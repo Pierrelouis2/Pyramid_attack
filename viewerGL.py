@@ -6,9 +6,9 @@ import OpenGL.GL as GL
 import glfw
 import pyrr
 import numpy as np
-from cpe3d import Object3D
+from cpe3d import Object3D, Camera
 import Pyramid
-import pymeshlab as mlab
+
 
  
 class ViewerGL:
@@ -107,6 +107,9 @@ class ViewerGL:
 
     def set_camera(self, cam):
         self.cam = cam
+        glfw.set_cursor_pos_callback(self.window, self.cam.cursor_pos_callback)
+
+
 
     def update_camera(self, prog):
         GL.glUseProgram(prog)
