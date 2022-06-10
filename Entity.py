@@ -14,12 +14,11 @@ class Entity():
     cree la base de chaque pyramide ou joueur
     """
 
-    def __init__(self, vie, coord, rot, obj, texture, scale, viewer, name):
+    def __init__(self, vie, coord, rot, obj, texture, viewer, name,vao_obj):
         self.coord = coord  # position de l'entité au début [x,y,z]
         self.rot = rot  # rotation de l'entité
         self.life = vie  # vie de l'entité
         self.obj = obj
-        self.scale = scale  # taille de l'entité
         self.texture = texture
         self.liste_projectile = []
         self.viewer = viewer
@@ -27,6 +26,7 @@ class Entity():
         self.name = name
         self.object = None
         self.bounding_boxe= None 
+        self.vao = vao_obj
 
     def create(self):
         """
@@ -34,28 +34,35 @@ class Entity():
         Description:
         cree l entité
         """
+       
 
-        m = Mesh.load_obj(self.obj)
-        m.normalize()
-        # Taille de la pyramide
-        m.apply_matrix(pyrr.matrix44.create_from_scale(self.scale))
-        tr = Transformation3D()
-        tr.translation.x = self.coord[0]
-        tr.translation.y = -np.amin(m.vertices, axis=0)[1]
-        tr.translation.z = self.coord[2]
+        if self.name != "sol" :
 
-        tr.rotation_center.x = self.rot[0]
-        tr.rotation_center.y = self.rot[1]
-        tr.rotation_center.z = self.rot[2]
-        texture = glutils.load_texture(self.texture)
+            
+            tr = Transformation3D()
+            tr.translation.x = self.coord[0]
+            tr.translation.y = -np.amin(self.obj.vertices, axis=0)[1]
+            tr.translation.z = self.coord[2]
 
-        self.object = Object3D(m.load_to_gpu(), m.get_nb_triangles(),
-                               self.program3d_id, texture, tr)
+            tr.rotation_center.x = self.rot[0]
+            tr.rotation_center.y = self.rot[1]
+            tr.rotation_center.z = self.rot[2]
+
+
+            self.object = Object3D(self.vao, self.obj.get_nb_triangles(),
+                                self.program3d_id, self.texture, tr)
+        
+        if self.name == "sol" : 
+            self.object = Object3D(self.vao, self.obj.get_nb_triangles(),
+                            self.program3d_id, self.texture, Transformation3D())
+
         self.viewer.add_object(self.object)
         if self.name == "pyramide":
-            self.viewer.add_object_pyamide(self.object)
+            self.viewer.add_object_pyamide(self)
         if self.name == "projectile":
             self.viewer.add_object_projectile(self.object)
+        if self.name == "humain" :
+            self.viewer.add_humain(self)
         
         self.bounding_boxes = BoundingBox(self)
 
