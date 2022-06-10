@@ -22,7 +22,6 @@ def main():
     viewer.program3d_id = glutils.create_program_from_file('vert/shader.vert', 'frag/shader.frag')
     viewer.programGUI_id = glutils.create_program_from_file('vert/gui.vert', 'frag/gui.frag')
 
-
     dic_text = {}
     dic_obj = {}
     dic_vao = {}
@@ -32,6 +31,7 @@ def main():
     dic_text["pyramid"] = glutils.load_texture("Textures/architecture.jpg")
     dic_text["sol"] = glutils.load_texture("Textures/TextureSand.jpeg")
     dic_text["humain"] = glutils.load_texture("Textures/multicolor.png")
+    dic_text["cube"] = glutils.load_texture("Textures/cube.png")
     
     dic_obj["pyramid"] = Mesh.load_obj("Textures/pyramid.obj")
     dic_obj["pyramid"].normalize()
@@ -39,6 +39,9 @@ def main():
     dic_obj["humain"] = Mesh.load_obj("Textures/homme.obj")
     dic_obj["humain"].normalize()
     dic_obj["humain"].apply_matrix(pyrr.matrix44.create_from_scale([0.5, 0.5, 0.5, 1]))
+    dic_obj["cube"] = Mesh.load_obj("Textures/cube.obj")
+    dic_obj["cube"].normalize()
+
 
     #chargement sol
     m = Mesh()
@@ -52,15 +55,13 @@ def main():
     dic_vao["humain"] = dic_obj["humain"].load_to_gpu()
     dic_vao["pyramid"] = dic_obj["pyramid"].load_to_gpu()
     dic_vao["sol"] = dic_obj["sol"].load_to_gpu()
+    dic_vao["cube"] = dic_obj["cube"].load_to_gpu()
 
-    #------------------------Fin Chargements des textures + objs ----------------------------
-
-
+    #------------------------Fin Chargements des textures + objs ---------------------------
     # humain
     humain = Humain.Humain(vie=1, coord=[0, 0, 0], rot=[0, 0, 0], obj=dic_obj["humain"],
                            texture=dic_text["humain"], viewer=viewer, name="humain",vao_obj=dic_vao["humain"])
     humain.create()
-
 
     # Spawn Pyramide
     nbr_pyramide = 10
@@ -76,6 +77,7 @@ def main():
     # Sol
     sol  = Entity.Entity(vie=1, coord=[0,0,0], rot=[0,0,0], obj=dic_obj["sol"],texture=dic_text["sol"],viewer=viewer,vao_obj = dic_vao["sol"],name="sol")
     sol.create()
+
     # Text Pause
     vao_obj = Text.initalize_geometry()
     texture = glutils.load_texture('Textures/fontB.jpg')
