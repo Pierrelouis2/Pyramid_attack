@@ -83,6 +83,10 @@ class Camera:
             if (x != 400 or y != 400) :
                 self.mouse_dX = x - 400
                 self.mouse_dY = y - 400
+                if -0.46000000000000023>=self.viewer.cam.transformation.rotation_euler[pyrr.euler.index().roll] + self.mouse_dY/200:
+                    self.mouse_dY = 0
+                elif self.viewer.cam.transformation.rotation_euler[pyrr.euler.index().roll]>= math.pi/2 and self.mouse_dY>0:
+                    self.mouse_dY = 0
                 self.update()
                 if self.mouse_dX >0:
                     self.viewer.objs[0].transformation.rotation_euler[pyrr.euler.index().yaw] += self.mouse_dX/100
@@ -92,7 +96,7 @@ class Camera:
         elif self.first_mouse == True:
             self.first_mouse = False
             glfw.set_cursor_pos(self.viewer.window,400,400)
-
+        print(self.viewer.cam.transformation.rotation_euler[pyrr.euler.index().roll])
 
     def update(self):
         self.viewer.cam.transformation.rotation_euler[pyrr.euler.index().roll] += self.mouse_dY/200
