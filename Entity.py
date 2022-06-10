@@ -51,7 +51,7 @@ class Entity():
         if self.name == "humain" :
             self.viewer.add_humain(self)
 
-        if self.name != "sol":
+        if self.name != "sol" and self.name != "line":
             self.bounding_box = BoundingBox(self)
 
 
