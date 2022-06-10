@@ -78,18 +78,17 @@ class Camera:
 
     def cursor_pos_callback(self, window, x, y):
         print(x, y)
-
         if x != 400 or y != 400:
             self.mouse_dX = x - 400
             self.mouse_dY = y - 400
-            glfw.set_cursor_pos(self.viewer.window,400,400)
             self.update()
-
-
+            glfw.set_cursor_pos(self.viewer.window,400,400)
+            
     def update(self):
-        self.viewer.cam.transformation.rotation_euler[pyrr.euler.index().roll] += self.mouse_dY/100
+        self.viewer.cam.transformation.rotation_euler[pyrr.euler.index().roll] += self.mouse_dY/200
         self.viewer.cam.transformation.rotation_euler[pyrr.euler.index().yaw] += self.mouse_dX/100
-        self.viewer.update_camera()
+        self.viewer.update_camera(self.viewer.program3d_id)
+
 
 
 
