@@ -244,8 +244,7 @@ class ViewerGL:
 
 
     def shoot(self) :
-        proj = arrow.Arrow(vie=1, coord=self.objs_humain.object.transformation.translation, rot=[0,0,0], obj=self.dic_obj["arrow"],
-                            texture=self.dic_text["arrow"], viewer=self, name="arrow",vao_obj=self.dic_vao["arrow"])
+        proj = arrow.Arrow(vie=1, coord=self.objs_humain.object.transformation.translation, rot=[0,0,0], obj=self.dic_obj["arrow"],texture=self.dic_text["arrow"], viewer=self, name="arrow",vao_obj=self.dic_vao["arrow"])
         proj.create()
         proj.object.transformation.translation.y += self.objs_humain.object.transformation.translation.y +0.1
         proj.object.transformation.rotation_euler[pyrr.euler.index().yaw] = self.objs_humain.object.transformation.rotation_euler[pyrr.euler.index().yaw] + math.pi/2
@@ -254,5 +253,6 @@ class ViewerGL:
 
     def update_line(self):
         self.line.object.transformation.translation = self.objs_humain.object.transformation.translation + 0.1
-        self.line.object.transformation.rotation_euler[pyrr.euler.index().yaw] = self.objs_humain.object.transformation.rotation_euler[pyrr.euler.index().yaw]
-        self.line.object.transformation.rotation_euler[pyrr.euler.index().roll] = self.cam.transformation.rotation_euler[pyrr.euler.index().roll]
+        # self.line.object.transformation.rotation_euler[pyrr.euler.index().yaw] = self.objs_humain.object.transformation.rotation_euler[pyrr.euler.index().yaw]
+        # self.line.object.transformation.rotation_euler[pyrr.euler.index().roll] = self.cam.transformation.rotation_euler[pyrr.euler.index().roll]
+        #self.line.object.transformation.rotation_euler = self.cam.transformation.rotation_euler
