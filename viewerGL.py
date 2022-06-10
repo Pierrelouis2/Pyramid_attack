@@ -48,6 +48,7 @@ class ViewerGL:
         self.jumping_force = 19910
         self.bool_jumping = False
         self.delta_posX = 0.2
+        self.delta_posY = 0.2
         self.gravity = -9.81
         self.weight = 75
         self.accelerationY = self.gravity
@@ -157,19 +158,26 @@ class ViewerGL:
         GL.glUniformMatrix4fv(loc, 1, GL.GL_FALSE, self.cam.projection)
 
     def update_key(self):
-        if glfw.KEY_UP in self.touch and self.touch[glfw.KEY_UP] > 0:
+        if glfw.KEY_W in self.touch and self.touch[glfw.KEY_W] > 0:
             self.objs[0].transformation.translation += \
                 pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(
                     self.objs[0].transformation.rotation_euler), pyrr.Vector3([0, 0, self.delta_posX]))
 
-        if glfw.KEY_DOWN in self.touch and self.touch[glfw.KEY_DOWN] > 0:
+        if glfw.KEY_S in self.touch and self.touch[glfw.KEY_S] > 0:
             self.objs[0].transformation.translation -= \
                 pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(
                     self.objs[0].transformation.rotation_euler), pyrr.Vector3([0, 0, self.delta_posX]))
-        if glfw.KEY_LEFT in self.touch and self.touch[glfw.KEY_LEFT] > 0:
-            self.objs[0].transformation.rotation_euler[pyrr.euler.index().yaw] -= 0.1
-        if glfw.KEY_RIGHT in self.touch and self.touch[glfw.KEY_RIGHT] > 0:
-            self.objs[0].transformation.rotation_euler[pyrr.euler.index().yaw] += 0.1
+
+        if glfw.KEY_A in self.touch and self.touch[glfw.KEY_A] > 0:
+            self.objs[0].transformation.translation += \
+                pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(
+                    self.objs[0].transformation.rotation_euler), pyrr.Vector3([self.delta_posY,0,0]))
+
+        if glfw.KEY_D in self.touch and self.touch[glfw.KEY_D] > 0:
+            self.objs[0].transformation.translation -= \
+                pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(
+                    self.objs[0].transformation.rotation_euler), pyrr.Vector3([self.delta_posY,0,0]))
+
 
         if glfw.KEY_SPACE in self.touch and self.touch[glfw.KEY_SPACE] > 0:
             if not self.bool_jumping:
