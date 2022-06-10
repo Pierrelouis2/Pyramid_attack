@@ -39,26 +39,20 @@ class Entity():
             tr.translation.x = self.coord[0]
             tr.translation.y = -np.amin(self.obj.vertices, axis=0)[1]
             tr.translation.z = self.coord[2]
-
             tr.rotation_center.x = self.rot[0]
             tr.rotation_center.y = self.rot[1]
-
-
-            self.object = Object3D(self.vao, self.obj.get_nb_triangles(),
-                                self.program3d_id, self.texture, tr)
-        
-        if self.name == "sol" : 
-            self.object = Object3D(self.vao, self.obj.get_nb_triangles(),
-                            self.program3d_id, self.texture, Transformation3D())
+            self.object = Object3D(self.vao, self.obj.get_nb_triangles(),self.program3d_id, self.texture, tr)
+        else: 
+            self.object = Object3D(self.vao, self.obj.get_nb_triangles(),self.program3d_id, self.texture, Transformation3D())
 
         self.viewer.add_object(self.object)
         if self.name == "pyramid":
             self.viewer.add_object_pyramide(self)
         if self.name == "humain" :
             self.viewer.add_humain(self)
-        
+
         if self.name != "sol":
-            self.bounding_boxes = BoundingBox(self)
+            self.bounding_box = BoundingBox(self)
 
 
 class BoundingBox:
@@ -71,6 +65,7 @@ class BoundingBox:
         self.coord = entity.coord
         self.obj = entity.viewer.dic_obj[f"cube_{entity.name}"]
         self.texture = entity.viewer.dic_text["cube"]
+        self.create()
 
     def create(self):
         #self.obj.apply_matrix(pyrr.matrix44.create_from_scale(self.scale*2))
@@ -85,23 +80,15 @@ class BoundingBox:
         self.viewer.add_bounding_box(self.object)
 
     def intersect(self,position):
-        return pyrr.vector3.length(self.position-position) < self.size
+        return pyrr.vector3.length(self.position-position) < 1
 
     def intersectB(self,bounding_box):
-        return pyrr.vector3.length(self.position - bounding_box.position) < self.size+ bounding_box.position
+        return pyrr.vector3.length(self.position - bounding_box.position) < 1 + bounding_box.position
 
     def intersectE(self,entity):
-        if not entity.general_bounding_box == None:
-            if entity.general_bounding_box.intersectB(self):
-                for bounding_box in entity.bounding_boxes:
-                    if not bounding_box == None:
-                        if bounding_box.intersectB(self):
-                            return True
+        if entity.object.bounding_box.intersectB(self):
+            for bounding_box in self.viewer.bounding_boxes:
+                if bounding_box.intersectB(self):
+                    return True
         return False
 
-    def adapt(self,transformation):
-        self.position = transformation.translation + pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(transformation.rotation_euler), self.offset)
-        self.ent.object.transformation.translation = self.position
-
-    def draw(self):
-        self.ent.render()
