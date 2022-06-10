@@ -76,6 +76,8 @@ class Camera:
         self.viewer = viewer
         glfw.set_input_mode(self.viewer.window, glfw.CURSOR, glfw.CURSOR_HIDDEN)
         self.first_mouse = True
+
+
     def cursor_pos_callback(self, window, x, y):
         if self.first_mouse == False:
             if (x != 400 or y != 400) :
@@ -87,9 +89,10 @@ class Camera:
                 elif self.mouse_dX<0:
                     self.viewer.objs[0].transformation.rotation_euler[pyrr.euler.index().yaw] += self.mouse_dX/100
                 glfw.set_cursor_pos(self.viewer.window,400,400)
-        if self.first_mouse == True:
+        elif self.first_mouse == True:
             self.first_mouse = False
             glfw.set_cursor_pos(self.viewer.window,400,400)
+
 
     def update(self):
         self.viewer.cam.transformation.rotation_euler[pyrr.euler.index().roll] += self.mouse_dY/200
