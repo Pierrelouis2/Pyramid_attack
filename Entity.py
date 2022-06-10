@@ -53,9 +53,7 @@ class Entity():
 
         self.viewer.add_object(self.object)
         if self.name == "pyramid":
-            self.viewer.add_object_pyamide(self)
-        if self.name == "arrow":
-            self.viewer.add_object_projectile(self)
+            self.viewer.add_object_pyramide(self)
         if self.name == "humain" :
             self.viewer.add_humain(self)
         

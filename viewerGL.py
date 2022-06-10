@@ -107,10 +107,9 @@ class ViewerGL:
     def add_object(self, obj):
         self.objs.append(obj)
 
-    def add_object_pyamide(self, obj):
+    def add_object_pyramide(self, obj):
         self.objs_pyramide.append(obj)
 
-    
     def add_bounding_box(self, obj):
         self.objs_bounding_boxes.append(obj)
 
@@ -225,4 +224,3 @@ class ViewerGL:
         proj.object.transformation.rotation_euler[pyrr.euler.index().roll] = self.objs_humain.object.transformation.rotation_euler[pyrr.euler.index().roll]
         self.objs_projectile.append(proj)
 
-        print(self.objs_projectile)
