@@ -6,16 +6,15 @@ import OpenGL.GL as GL
 import glfw
 import pyrr
 import numpy as np
-from cpe3d import Object3D
+from cpe3d import Object3D, Camera
 import Pyramid
-import pymeshlab as mlab
 import arrow
  
 class ViewerGL:
     def __init__(self):
         # initialisation de la librairie GLFW
         glfw.init()
-        # paramétrage du context OpenGL
+        # parametrage du context OpenGL
         glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 3)
         glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 3)
         glfw.window_hint(glfw.OPENGL_FORWARD_COMPAT, GL.GL_TRUE)
@@ -43,6 +42,7 @@ class ViewerGL:
 
         self.lock_cam = True
         self.pause = False
+        self.bool_draw_bounding_boxes = False
 
         # pour faire un saut de 1 metre: (voir jumpforce.py)
         self.jumping_force = 19910
@@ -67,10 +67,15 @@ class ViewerGL:
                     if isinstance(obj, Object3D):
                         self.update_camera(obj.program)
                     obj.draw()
-                for i in self.objs_pyramide:
-                    i.mouvement(self.objs_humain)
+                for pyramid in self.objs_pyramide:
+                    pyramid.mouvement(self.objs_humain)
+                    pyramid.move_BB()
+                #gestion BoundingBox
+                if self.bool_draw_bounding_boxes:
+                    for bb in self.objs_bounding_boxes:
+                        bb.draw()
+                    self.objs_humain.move_BB()
                 self.update_key()
-
                 self.gravitation()
                 for proj in self.objs_projectile :
                     proj.mov_arrow()
@@ -108,12 +113,15 @@ class ViewerGL:
     
     def add_bounding_box(self, obj):
         self.objs_bounding_boxes.append(obj)
-        
+
     def add_humain(self, obj):
-        self.objs_humain =obj
+        self.objs_humain = obj
 
     def set_camera(self, cam):
         self.cam = cam
+        glfw.set_cursor_pos_callback(self.window, self.cam.cursor_pos_callback)
+
+
 
     def update_camera(self, prog):
         GL.glUseProgram(prog)
@@ -166,6 +174,8 @@ class ViewerGL:
             if not self.bool_jumping:
                 self.bool_jumping = True
                 self.accelerationY += self.jumping_force/self.weight
+        if glfw.KEY_B in self.touch and self.touch[glfw.KEY_B] > 0:
+            self.bool_draw_bounding_boxes = not self.bool_draw_bounding_boxes
 
         if glfw.KEY_I in self.touch and self.touch[glfw.KEY_I] > 0:
             self.cam.transformation.rotation_euler[pyrr.euler.index().roll] -= 0.02
@@ -176,12 +186,12 @@ class ViewerGL:
         if glfw.KEY_L in self.touch and self.touch[glfw.KEY_L] > 0:
             self.cam.transformation.rotation_euler[pyrr.euler.index().yaw] += 0.02
 
-        if self.lock_cam:
-            self.cam.transformation.rotation_euler = self.objs[0].transformation.rotation_euler.copy()
-            self.cam.transformation.rotation_euler[pyrr.euler.index().yaw] += np.pi
-            self.cam.transformation.rotation_center = self.objs[0].transformation.translation + self.objs[0].transformation.rotation_center
-            # on peut choisir l'offset lorsque l'on suit l'objet
-            self.cam.transformation.translation = self.objs[0].transformation.translation + pyrr.Vector3([0, 0.75, 2.556])
+        # if self.lock_cam:
+        #     self.cam.transformation.rotation_euler = self.objs[0].transformation.rotation_euler.copy()
+        #     self.cam.transformation.rotation_euler[pyrr.euler.index().yaw] += np.pi
+        #     self.cam.transformation.rotation_center = self.objs[0].transformation.translation + self.objs[0].transformation.rotation_center
+        #     # on peut choisir l'offset lorsque l'on suit l'objet
+        #     self.cam.transformation.translation = self.objs[0].transformation.translation + pyrr.Vector3([0, 0.75, 2.556])
 
         if glfw.KEY_X in self.touch and self.touch[glfw.KEY_X]> 0 :
             self.shoot()

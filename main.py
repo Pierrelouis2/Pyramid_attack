@@ -6,16 +6,19 @@ import numpy as np
 import OpenGL.GL as GL
 import random as rand
 import Pyramid
-import Entity
+from Entity import Entity, BoundingBox
 import Humain
 import math
+import glfw
 import pyrr
 
 def main():
     viewer = ViewerGL()
 
     # Cam
-    viewer.set_camera(Camera())
+    # cam = Camera(viewer,mouseX_middle = glfw.get_window_size(viewer.window)[0],mouseY_middle = glfw.get_window_size(viewer.window)[1])
+    cam = Camera(viewer)
+    viewer.set_camera(cam)
     viewer.cam.transformation.translation.y = 0.75
     viewer.cam.transformation.rotation_center = viewer.cam.transformation.translation.copy()
 
@@ -41,9 +44,16 @@ def main():
     dic_obj["humain"] = Mesh.load_obj("Textures/homme.obj")
     dic_obj["humain"].normalize()
     dic_obj["humain"].apply_matrix(pyrr.matrix44.create_from_scale([0.5, 0.5, 0.5, 1]))
-
-    dic_obj["cube"] = Mesh.load_obj("Textures/cube.obj")
-    dic_obj["cube"].normalize()
+    #bounding_box
+    dic_obj["cube_pyramid"] = Mesh.load_obj("Textures/cube.obj")
+    dic_obj["cube_pyramid"].normalize()
+    dic_obj["cube_pyramid"].apply_matrix(pyrr.matrix44.create_from_scale([0.25, 0.25, 0.25, 1]))
+    dic_obj["cube_humain"] = Mesh.load_obj("Textures/cube.obj")
+    dic_obj["cube_humain"].normalize()
+    dic_obj["cube_humain"].apply_matrix(pyrr.matrix44.create_from_scale([0.2, 0.5, 0.2, 1]))
+    dic_obj["cube_arrow"] = Mesh.load_obj("Textures/cube.obj")
+    dic_obj["cube_arrow"].normalize()
+    dic_obj["cube_arrow"].apply_matrix(pyrr.matrix44.create_from_scale([0.25, 0.25, 0.25, 1]))
 
     dic_obj["arrow"] = Mesh.load_obj("Textures/arrow.obj")
     dic_obj["arrow"].normalize()
@@ -67,10 +77,13 @@ def main():
 
     viewer.dic_vao = dic_vao
     #------------------------Fin Chargements des textures + objs ---------------------------
+
     # humain
     humain = Humain.Humain(vie=1, coord=[0, 0, 0], rot=[0, 0, 0], obj=dic_obj["humain"],
                            texture=dic_text["humain"], viewer=viewer, name="humain",vao_obj=dic_vao["humain"])
     humain.create()
+    humain.bounding_box = BoundingBox(humain)
+    humain.bounding_box.create()
 
     # Spawn Pyramide
     nbr_pyramide = 10
@@ -79,25 +92,25 @@ def main():
     for i in range(nbr_pyramide):
         teta = rand.randint(0, 10)
         pyramide = Pyramid.Pyramid(vie=1, coord=[rayon * math.cos(teta), 0, rayon * math.sin(teta)], rot=[0, 0, 0], obj=dic_obj["pyramid"],
-                                   texture=dic_text["pyramid"], viewer=viewer, name="pyramide",vao_obj = dic_vao["pyramid"])
+                                   texture=dic_text["pyramid"], viewer=viewer, name="pyramid",vao_obj = dic_vao["pyramid"])
         lst_pyramide.append(pyramide)
         pyramide.create()
+        pyramide.create_BB()
 
     # Sol
-    sol  = Entity.Entity(vie=1, coord=[0,0,0], rot=[0,0,0], obj=dic_obj["sol"],texture=dic_text["sol"],viewer=viewer,vao_obj = dic_vao["sol"],name="sol")
+    sol  = Entity(vie=1, coord=[0,0,0], rot=[0,0,0], obj=dic_obj["sol"],texture=dic_text["sol"],viewer=viewer,vao_obj = dic_vao["sol"],name="sol")
     sol.create()
 
     #Test arrow
     
     # Text Pause
     vao_obj = Text.initalize_geometry()
-    texture = glutils.load_texture('Textures/fontB.jpg')
-    text_pause = Text('Pause', np.array([-0.8, 0.3], np.float32), np.array([0.8, 0.8], np.float32), vao_obj, 2, viewer.program3d_id, texture)
+    texture = glutils.load_texture('Textures/fontB2.png')
+    text_pause = Text('Pause', np.array([-0.8, 0.3], np.float32), np.array([0.8, 0.8], np.float32), vao_obj, 2, viewer.programGUI_id, texture)
     viewer.text_pause = text_pause
 
 
     viewer.run()
-
 
 
 if __name__ == '__main__':

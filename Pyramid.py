@@ -15,3 +15,8 @@ class Pyramid(Entity):
     
     def create_BB(self):
         self.bounding_box = BoundingBox(self)
+        self.bounding_box.create()
+
+    def move_BB(self):
+        self.bounding_box.object.transformation.translation.x = self.object.transformation.translation.x
+        self.bounding_box.object.transformation.translation.z = self.object.transformation.translation.z
