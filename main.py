@@ -19,8 +19,8 @@ def main():
     viewer.cam.transformation.translation.y = 0.75
     viewer.cam.transformation.rotation_center = viewer.cam.transformation.translation.copy()
 
-    program3d_id = glutils.create_program_from_file('vert/shader.vert', 'frag/shader.frag')
-    programGUI_id = glutils.create_program_from_file('vert/gui.vert', 'frag/gui.frag')
+    viewer.program3d_id = glutils.create_program_from_file('vert/shader.vert', 'frag/shader.frag')
+    viewer.programGUI_id = glutils.create_program_from_file('vert/gui.vert', 'frag/gui.frag')
 
 
     dic_text = {}
@@ -58,7 +58,7 @@ def main():
 
     # humain
     humain = Humain.Humain(vie=1, coord=[0, 0, 0], rot=[0, 0, 0], obj=dic_obj["humain"],
-                           texture=dic_text["humain"], viewer=viewer, program3d_id=program3d_id, name="humain",vao_obj=dic_vao["humain"])
+                           texture=dic_text["humain"], viewer=viewer, name="humain",vao_obj=dic_vao["humain"])
     humain.create()
 
 
@@ -69,17 +69,17 @@ def main():
     for i in range(nbr_pyramide):
         teta = rand.randint(0, 10)
         pyramide = Pyramid.Pyramid(vie=1, coord=[rayon * math.cos(teta), 0, rayon * math.sin(teta)], rot=[0, 0, 0], obj=dic_obj["pyramid"],
-                                   texture=dic_text["pyramid"], viewer=viewer, program3d_id=program3d_id, name="pyramide",vao_obj = dic_vao["pyramid"])
+                                   texture=dic_text["pyramid"], viewer=viewer, name="pyramide",vao_obj = dic_vao["pyramid"])
         lst_pyramide.append(pyramide)
         pyramide.create()
 
     # Sol
-    sol  = Entity.Entity(vie=1, coord=[0,0,0], rot=[0,0,0], obj=dic_obj["sol"],texture=dic_text["sol"],viewer=viewer, program3d_id=program3d_id,vao_obj = dic_vao["sol"],name="sol")
+    sol  = Entity.Entity(vie=1, coord=[0,0,0], rot=[0,0,0], obj=dic_obj["sol"],texture=dic_text["sol"],viewer=viewer,vao_obj = dic_vao["sol"],name="sol")
     sol.create()
     # Text Pause
     vao_obj = Text.initalize_geometry()
     texture = glutils.load_texture('Textures/fontB.jpg')
-    text_pause = Text('Pause', np.array([-0.8, 0.3], np.float32), np.array([0.8, 0.8], np.float32), vao_obj, 2, programGUI_id, texture)
+    text_pause = Text('Pause', np.array([-0.8, 0.3], np.float32), np.array([0.8, 0.8], np.float32), vao_obj, 2, viewer.programme3d_id, texture)
     viewer.text_pause = text_pause
 
 
