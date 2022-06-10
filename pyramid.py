@@ -9,3 +9,4 @@ class Pyramid(object):
 
     def spawn(self):
         self.proba = 0.1 
+        
