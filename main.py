@@ -26,10 +26,6 @@ def main():
     humain.create()
     viewer.humain = humain
 
-    ms = mlab.MeshSet()
-    ms.load_new_mesh(humain.obj)
-    boundingbox = ms.current_mesh().bounding_box()
-    print(boundingbox.diagonal())
 
 
 # Spawn Pyramide
