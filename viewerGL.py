@@ -38,6 +38,7 @@ class ViewerGL:
         self.objs_pyramide = []
         self.objs_projectile = []
         self.touch = {}
+        self.objs_humain = None
 
         self.lock_cam = True
         self.pause = False
@@ -65,8 +66,8 @@ class ViewerGL:
                     if isinstance(obj, Object3D):
                         self.update_camera(obj.program)
                     obj.draw()
-                for i in self.lst_pyramide:
-                    i.mouvement(self.humain)
+                for i in self.objs_pyramide:
+                    i.mouvement(self.objs_humain)
                 self.update_key()
 
                 self.gravitation()
@@ -104,6 +105,8 @@ class ViewerGL:
 
     def add_object_projectile(self, obj):
         self.objs_projectile.append(obj)
+    def add_humain(self, obj):
+        self.objs_humain =obj
 
     def set_camera(self, cam):
         self.cam = cam
