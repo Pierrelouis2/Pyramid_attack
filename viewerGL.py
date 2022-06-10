@@ -15,7 +15,7 @@ class ViewerGL:
     def __init__(self):
         # initialisation de la librairie GLFW
         glfw.init()
-        # paramétrage du context OpenGL
+        # parametrage du context OpenGL
         glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 3)
         glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 3)
         glfw.window_hint(glfw.OPENGL_FORWARD_COMPAT, GL.GL_TRUE)
@@ -43,6 +43,7 @@ class ViewerGL:
 
         self.lock_cam = True
         self.pause = False
+        self.bool_draw_bounding_boxes = False
 
         # pour faire un saut de 1 metre: (voir jumpforce.py)
         self.jumping_force = 19910
@@ -67,10 +68,14 @@ class ViewerGL:
                     if isinstance(obj, Object3D):
                         self.update_camera(obj.program)
                     obj.draw()
-                for i in self.objs_pyramide:
-                    i.mouvement(self.objs_humain)
-                self.update_key()
+                for pyramid in self.objs_pyramide:
+                    pyramid.mouvement(self.objs_humain)
+                    pyramid.move_BB()
+                if self.bool_draw_bounding_boxes:
+                    for bb in self.objs_bounding_boxes:
+                        bb.draw()
 
+                self.update_key()
                 self.gravitation()
 
             else:
@@ -109,7 +114,7 @@ class ViewerGL:
     
     def add_bounding_box(self, obj):
         self.objs_bounding_boxes.append(obj)
-        
+
     def add_humain(self, obj):
         self.objs_humain =obj
 
@@ -167,6 +172,8 @@ class ViewerGL:
             if not self.bool_jumping:
                 self.bool_jumping = True
                 self.accelerationY += self.jumping_force/self.weight
+        if glfw.KEY_B in self.touch and self.touch[glfw.KEY_B] > 0:
+            self.bool_draw_bounding_boxes = not self.bool_draw_bounding_boxes
 
         if glfw.KEY_I in self.touch and self.touch[glfw.KEY_I] > 0:
             self.cam.transformation.rotation_euler[pyrr.euler.index().roll] -= 0.02

@@ -6,7 +6,7 @@ import numpy as np
 import OpenGL.GL as GL
 import random as rand
 import Pyramid
-import Entity
+from Entity import Entity, BoundingBox
 import Humain
 import math
 import pyrr
@@ -41,6 +41,8 @@ def main():
     dic_obj["humain"].apply_matrix(pyrr.matrix44.create_from_scale([0.5, 0.5, 0.5, 1]))
     dic_obj["cube"] = Mesh.load_obj("Textures/cube.obj")
     dic_obj["cube"].normalize()
+    dic_obj["cube"].apply_matrix(pyrr.matrix44.create_from_scale([0.25, 0.25, 0.25, 1]))
+    
 
     viewer.dic_obj = dic_obj
     viewer.dic_text = dic_text
@@ -58,12 +60,16 @@ def main():
     dic_vao["pyramid"] = dic_obj["pyramid"].load_to_gpu()
     dic_vao["sol"] = dic_obj["sol"].load_to_gpu()
     dic_vao["cube"] = dic_obj["cube"].load_to_gpu()
+    viewer.dic_vao = dic_vao
 
     #------------------------Fin Chargements des textures + objs ---------------------------
+
     # humain
     humain = Humain.Humain(vie=1, coord=[0, 0, 0], rot=[0, 0, 0], obj=dic_obj["humain"],
                            texture=dic_text["humain"], viewer=viewer, name="humain",vao_obj=dic_vao["humain"])
     humain.create()
+    humain.bounding_box = BoundingBox(humain)
+    humain.bounding_box.create()
 
     # Spawn Pyramide
     nbr_pyramide = 10
@@ -75,9 +81,10 @@ def main():
                                    texture=dic_text["pyramid"], viewer=viewer, name="pyramide",vao_obj = dic_vao["pyramid"])
         lst_pyramide.append(pyramide)
         pyramide.create()
+        pyramide.create_BB()
 
     # Sol
-    sol  = Entity.Entity(vie=1, coord=[0,0,0], rot=[0,0,0], obj=dic_obj["sol"],texture=dic_text["sol"],viewer=viewer,vao_obj = dic_vao["sol"],name="sol")
+    sol  = Entity(vie=1, coord=[0,0,0], rot=[0,0,0], obj=dic_obj["sol"],texture=dic_text["sol"],viewer=viewer,vao_obj = dic_vao["sol"],name="sol")
     sol.create()
 
     # Text Pause
