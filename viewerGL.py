@@ -220,8 +220,8 @@ class ViewerGL:
         proj = arrow.Arrow(vie=1, coord=[0, 3, 0], rot=[0,0,0], obj=self.dic_obj["arrow"],
                             texture=self.dic_text["arrow"], viewer=self, name="arrow",vao_obj=self.dic_vao["arrow"])
         proj.create()
-        proj.object.transformation.rotation_euler[pyrr.euler.index().yaw] = self.objs_humain.object.transformation.rotation_euler[pyrr.euler.index().yaw]
+        proj.object.transformation.rotation_euler[pyrr.euler.index().yaw] = self.cam.transformation.rotation_euler[pyrr.euler.index().yaw]
 
-        proj.object.transformation.rotation_euler[pyrr.euler.index().roll] = self.objs_humain.object.transformation.rotation_euler[pyrr.euler.index().roll]
+        proj.object.transformation.rotation_euler[pyrr.euler.index().roll] = self.cam.transformation.rotation_euler[pyrr.euler.index().roll]
         self.objs_projectile.append(proj)
 
