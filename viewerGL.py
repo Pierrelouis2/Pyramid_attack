@@ -79,6 +79,7 @@ class ViewerGL:
                 self.gravitation()
                 for proj in self.objs_projectile :
                     proj.mov_arrow()
+                    proj.move_BB()
             else:
                 GL.glClearColor(0.2, 0.2, 0.2, 0.5)
                 self.text_pause.draw()

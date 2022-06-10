@@ -25,7 +25,7 @@ class Entity():
         self.program3d_id = viewer.program3d_id
         self.name = name
         self.object = None
-        self.bounding_boxe= None 
+        self.bounding_box= None 
         self.vao = vao_obj
 
     def create(self):
