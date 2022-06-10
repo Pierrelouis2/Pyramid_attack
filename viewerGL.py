@@ -37,6 +37,7 @@ class ViewerGL:
         self.objs = []
         self.objs_pyramide = []
         self.objs_projectile = []
+        self.objs_bounding_boxes = []
         self.touch = {}
 
         self.lock_cam = True
@@ -104,6 +105,9 @@ class ViewerGL:
 
     def add_object_projectile(self, obj):
         self.objs_projectile.append(obj)
+    
+    def add_bounding_box(self, obj):
+        self.objs_bounding_boxes.append(obj)
 
     def set_camera(self, cam):
         self.cam = cam
@@ -161,34 +165,25 @@ class ViewerGL:
                 self.accelerationY += self.jumping_force/self.weight
 
         if glfw.KEY_I in self.touch and self.touch[glfw.KEY_I] > 0:
-            self.cam.transformation.rotation_euler[pyrr.euler.index(
-            ).roll] -= 0.02
+            self.cam.transformation.rotation_euler[pyrr.euler.index().roll] -= 0.02
         if glfw.KEY_K in self.touch and self.touch[glfw.KEY_K] > 0:
-            self.cam.transformation.rotation_euler[pyrr.euler.index(
-            ).roll] += 0.02
+            self.cam.transformation.rotation_euler[pyrr.euler.index().roll] += 0.02
         if glfw.KEY_J in self.touch and self.touch[glfw.KEY_J] > 0:
-            self.cam.transformation.rotation_euler[pyrr.euler.index(
-            ).yaw] -= 0.02
+            self.cam.transformation.rotation_euler[pyrr.euler.index().yaw] -= 0.02
         if glfw.KEY_L in self.touch and self.touch[glfw.KEY_L] > 0:
-            self.cam.transformation.rotation_euler[pyrr.euler.index(
-            ).yaw] += 0.02
+            self.cam.transformation.rotation_euler[pyrr.euler.index().yaw] += 0.02
 
         if self.lock_cam:
-            self.cam.transformation.rotation_euler = self.objs[0].transformation.rotation_euler.copy(
-            )
-            self.cam.transformation.rotation_euler[pyrr.euler.index(
-            ).yaw] += np.pi
-            self.cam.transformation.rotation_center = self.objs[0].transformation.translation + \
-                self.objs[0].transformation.rotation_center
+            self.cam.transformation.rotation_euler = self.objs[0].transformation.rotation_euler.copy()
+            self.cam.transformation.rotation_euler[pyrr.euler.index().yaw] += np.pi
+            self.cam.transformation.rotation_center = self.objs[0].transformation.translation + self.objs[0].transformation.rotation_center
             # on peut choisir l'offset lorsque l'on suit l'objet
-            self.cam.transformation.translation = self.objs[0].transformation.translation + pyrr.Vector3([
-                0, 0.75, 2.556])
+            self.cam.transformation.translation = self.objs[0].transformation.translation + pyrr.Vector3([0, 0.75, 2.556])
 
     def gravitation(self):
         # TODO Faire autre chose que quitter la fct
         self.velocityY += self.accelerationY * self.dt
         # condition a revoir
-
         X = self.objs[0].transformation.translation.x
         Y = self.objs[0].transformation.translation.y
         Z = self.objs[0].transformation.translation.z
@@ -201,6 +196,5 @@ class ViewerGL:
             self.objs[0].transformation.translation.y = 0.75
             self.objs[0].transformation.translation.z = 0
         self.objs[0].transformation.translation += \
-            pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(
-                self.objs[0].transformation.rotation_euler), pyrr.Vector3([0, self.velocityY * self.dt, 0]))
+            pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(self.objs[0].transformation.rotation_euler), pyrr.Vector3([0, self.velocityY * self.dt, 0]))
         self.accelerationY = self.gravity

@@ -19,13 +19,12 @@ def main():
     viewer.cam.transformation.translation.y = 0.75
     viewer.cam.transformation.rotation_center = viewer.cam.transformation.translation.copy()
 
-    program3d_id = glutils.create_program_from_file('vert/shader.vert', 'frag/shader.frag')
-    programGUI_id = glutils.create_program_from_file('vert/gui.vert', 'frag/gui.frag')
+    viewer.program3d_id = glutils.create_program_from_file('vert/shader.vert', 'frag/shader.frag')
+    viewer.programGUI_id = glutils.create_program_from_file('vert/gui.vert', 'frag/gui.frag')
     # humain
-    humain = Humain.Humain(vie=1, coord=[0, 0, 0], rot=[0, 0, 0], obj='Textures/homme.obj',texture='Textures/multicolor.png', scale=[0.5, 0.5, 0.5, 1], viewer=viewer, program3d_id=program3d_id, name="humain")
+    humain = Humain.Humain(vie=1, coord=[0, 0, 0], rot=[0, 0, 0], obj='Textures/homme.obj',texture='Textures/multicolor.png', scale=[0.5, 0.5, 0.5, 1], viewer=viewer, name="humain")
     humain.create()
     viewer.humain = humain
-
 
 
 # Spawn Pyramide
@@ -34,7 +33,7 @@ def main():
     rayon = 10
     for i in range(nbr_pyramide):
         teta = rand.randint(0, 10)
-        pyramide = Pyramid.Pyramid(vie=1, coord=[rayon * math.cos(teta), 0, rayon * math.sin(teta)], rot=[0, 0, 0], obj="Textures/pyramid-simple-design.obj",texture="Textures/architecture.jpg", scale=[0.25, 0.25, 0.25, 1], viewer=viewer, program3d_id=program3d_id, name="pyramide")
+        pyramide = Pyramid.Pyramid(vie=1, coord=[rayon * math.cos(teta), 0, rayon * math.sin(teta)], rot=[0, 0, 0], obj="Textures/pyramid-simple-design.obj",texture="Textures/architecture.jpg", scale=[0.25, 0.25, 0.25, 1], viewer=viewer, name="pyramide")
         lst_pyramide.append(pyramide)
         pyramide.create()
         viewer.lst_pyramide = lst_pyramide
@@ -47,13 +46,13 @@ def main():
     m.vertices = np.array([[p0 + n + c + t0], [p1 + n + c + t1],[p2 + n + c + t2], [p3 + n + c + t3]], np.float32)
     m.faces = np.array([[0, 1, 2], [0, 2, 3]], np.uint32)
     texture = glutils.load_texture('Textures/TextureSand.jpeg')
-    o = Object3D(m.load_to_gpu(), m.get_nb_triangles(),program3d_id, texture, Transformation3D())
+    o = Object3D(m.load_to_gpu(), m.get_nb_triangles(),viewer.program3d_id, texture, Transformation3D())
     viewer.add_object(o)
 
     # Text Pause
     vao = Text.initalize_geometry()
     texture = glutils.load_texture('Textures/fontB.jpg')
-    text_pause = Text('Pause', np.array([-0.8, 0.3], np.float32), np.array([0.8, 0.8], np.float32), vao, 2, programGUI_id, texture)
+    text_pause = Text('Pause', np.array([-0.8, 0.3], np.float32), np.array([0.8, 0.8], np.float32), vao, 2, viewer.programGUI_id, texture)
     viewer.text_pause = text_pause
 
 
