@@ -34,7 +34,8 @@ def main():
     dic_text["sol"] = glutils.load_texture("Textures/TextureSand.jpeg")
     dic_text["humain"] = glutils.load_texture("Textures/multicolor.png")
     dic_text["cube"] = glutils.load_texture("Textures/cube.png")
-    dic_text["arrow"] = glutils.load_texture("Textures/multicolor.png")
+    dic_text["arrow"] = dic_text["humain"]
+    dic_text["line"] = dic_text["humain"]
     
     dic_obj["pyramid"] = Mesh.load_obj("Textures/pyramid.obj")
     dic_obj["pyramid"].normalize()
@@ -53,6 +54,9 @@ def main():
     dic_obj["cube_arrow"] = Mesh.load_obj("Textures/cube.obj")
     dic_obj["cube_arrow"].normalize()
     dic_obj["cube_arrow"].apply_matrix(pyrr.matrix44.create_from_scale([0.25, 0.25, 0.25, 1]))
+    dic_obj["line"] = Mesh.load_obj("Textures/cube.obj")
+    dic_obj["line"].normalize()
+    dic_obj["line"].apply_matrix(pyrr.matrix44.create_from_scale([0.01, 0.01, 2, 1]))
 
     dic_obj["arrow"] = Mesh.load_obj("Textures/arrow.obj")
     dic_obj["arrow"].normalize()
@@ -81,6 +85,7 @@ def main():
     humain = Humain.Humain(vie=1, coord=[0, 0, 0], rot=[0, 0, 0], obj=dic_obj["humain"],
                            texture=dic_text["humain"], viewer=viewer, name="humain",vao_obj=dic_vao["humain"])
     humain.create()
+    # il faut mettre l'humain a l'endroit
     humain.object.transformation.rotation_euler[pyrr.euler.index().yaw] = math.pi
 
     # Spawn Pyramide
@@ -96,11 +101,13 @@ def main():
         #pyramide.create_BB()
 
     # Sol
-    sol  = Entity(vie=1, coord=[0,0,0], rot=[0,0,0], obj=dic_obj["sol"],texture=dic_text["sol"],viewer=viewer,vao_obj = dic_vao["sol"],name="sol")
+    sol  = Entity(vie=1, coord=[0,0,0], rot=[0,math.pi/2,math.pi/2], obj=dic_obj["sol"],texture=dic_text["sol"],viewer=viewer,vao_obj = dic_vao["sol"],name="sol")
     sol.create()
 
-    #Test arrow
-    
+    #Test "line"
+    line = Entity(vie = 1, coord=[0,0,0], rot=[0,0,0], obj=dic_obj["line"],texture=dic_text["line"],viewer=viewer, vao_obj = dic_vao["line"],name="line")
+    line.create()
+    viewer.line = line
     # Text Pause
     vao_obj = Text.initalize_geometry()
     texture = glutils.load_texture('Textures/fontB2.png')

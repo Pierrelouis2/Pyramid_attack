@@ -9,6 +9,7 @@ import numpy as np
 from cpe3d import Object3D, Camera
 import Pyramid
 import arrow
+import math
  
 class ViewerGL:
     def __init__(self):
@@ -79,9 +80,11 @@ class ViewerGL:
                     self.objs_humain.move_BB()
                 self.update_key()
                 self.gravitation()
+                self.update_line()
                 for proj in self.objs_projectile :
                     proj.mov_arrow()
                     proj.move_BB()
+
             else:
                 GL.glClearColor(0.2, 0.2, 0.2, 0.5)
                 self.text_pause.draw()
@@ -219,11 +222,15 @@ class ViewerGL:
 
 
     def shoot(self) :
-        proj = arrow.Arrow(vie=1, coord=[0, 3, 0], rot=[0,0,0], obj=self.dic_obj["arrow"],
+        proj = arrow.Arrow(vie=1, coord=self.objs_humain.object.transformation.translation, rot=[0,0,0], obj=self.dic_obj["arrow"],
                             texture=self.dic_text["arrow"], viewer=self, name="arrow",vao_obj=self.dic_vao["arrow"])
         proj.create()
-        proj.object.transformation.rotation_euler[pyrr.euler.index().yaw] = self.cam.transformation.rotation_euler[pyrr.euler.index().yaw]
-
+        proj.object.transformation.translation.y += self.objs_humain.object.transformation.translation.y +0.1
+        proj.object.transformation.rotation_euler[pyrr.euler.index().yaw] = self.objs_humain.object.transformation.rotation_euler[pyrr.euler.index().yaw] + math.pi/2
         proj.object.transformation.rotation_euler[pyrr.euler.index().roll] = self.cam.transformation.rotation_euler[pyrr.euler.index().roll]
         self.objs_projectile.append(proj)
 
+    def update_line(self):
+        self.line.object.transformation.translation = self.objs_humain.object.transformation.translation + 0.1
+        self.line.object.transformation.rotation_euler[pyrr.euler.index().yaw] = self.objs_humain.object.transformation.rotation_euler[pyrr.euler.index().yaw]
+        self.line.object.transformation.rotation_euler[pyrr.euler.index().roll] = self.cam.transformation.rotation_euler[pyrr.euler.index().roll]
