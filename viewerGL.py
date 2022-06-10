@@ -6,9 +6,9 @@ import OpenGL.GL as GL
 import glfw
 import pyrr
 import numpy as np
-from cpe3d import Object3D
+from cpe3d import Object3D, Camera
 import Pyramid
-import pymeshlab as mlab
+
 
  
 class ViewerGL:
@@ -120,6 +120,9 @@ class ViewerGL:
 
     def set_camera(self, cam):
         self.cam = cam
+        glfw.set_cursor_pos_callback(self.window, self.cam.cursor_pos_callback)
+
+
 
     def update_camera(self, prog):
         GL.glUseProgram(prog)
@@ -184,12 +187,12 @@ class ViewerGL:
         if glfw.KEY_L in self.touch and self.touch[glfw.KEY_L] > 0:
             self.cam.transformation.rotation_euler[pyrr.euler.index().yaw] += 0.02
 
-        if self.lock_cam:
-            self.cam.transformation.rotation_euler = self.objs[0].transformation.rotation_euler.copy()
-            self.cam.transformation.rotation_euler[pyrr.euler.index().yaw] += np.pi
-            self.cam.transformation.rotation_center = self.objs[0].transformation.translation + self.objs[0].transformation.rotation_center
-            # on peut choisir l'offset lorsque l'on suit l'objet
-            self.cam.transformation.translation = self.objs[0].transformation.translation + pyrr.Vector3([0, 0.75, 2.556])
+        # if self.lock_cam:
+        #     self.cam.transformation.rotation_euler = self.objs[0].transformation.rotation_euler.copy()
+        #     self.cam.transformation.rotation_euler[pyrr.euler.index().yaw] += np.pi
+        #     self.cam.transformation.rotation_center = self.objs[0].transformation.translation + self.objs[0].transformation.rotation_center
+        #     # on peut choisir l'offset lorsque l'on suit l'objet
+        #     self.cam.transformation.translation = self.objs[0].transformation.translation + pyrr.Vector3([0, 0.75, 2.556])
 
     def gravitation(self):
         # TODO Faire autre chose que quitter la fct

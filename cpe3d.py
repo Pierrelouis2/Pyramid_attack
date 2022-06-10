@@ -1,6 +1,8 @@
 import OpenGL.GL as GL
 import pyrr
 import numpy as np
+import glfw
+
 
 
 class Transformation3D:
@@ -66,9 +68,28 @@ class Object3D(Object):
 
 
 class Camera:
-    def __init__(self, transformation=Transformation3D(translation=pyrr.Vector3([0, 1, 0], dtype='float32')), projection=pyrr.matrix44.create_perspective_projection(60, 1, 0.01, 100)):
+    def __init__(self,viewer, transformation=Transformation3D(translation=pyrr.Vector3([0, 1, 0], dtype='float32')), projection=pyrr.matrix44.create_perspective_projection(60, 1, 0.01, 100)):
         self.transformation = transformation
         self.projection = projection
+        self.mouse_dX = 0
+        self.mouse_dY = 0
+        self.viewer = viewer
+        # glfw.set_input_mode(self.viewer.window, glfw.CURSOR, glfw.CURSOR_HIDDEN)
+
+    def cursor_pos_callback(self, window, x, y):
+        print(x, y)
+        if x != 400 or y != 400:
+            self.mouse_dX = x - 400
+            self.mouse_dY = y - 400
+            self.update()
+            glfw.set_cursor_pos(self.viewer.window,400,400)
+            
+    def update(self):
+        self.viewer.cam.transformation.rotation_euler[pyrr.euler.index().roll] += self.mouse_dY/200
+        self.viewer.cam.transformation.rotation_euler[pyrr.euler.index().yaw] += self.mouse_dX/100
+        self.viewer.update_camera(self.viewer.program3d_id)
+
+
 
 
 class Text(Object):

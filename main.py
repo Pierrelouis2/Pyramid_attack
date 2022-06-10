@@ -9,13 +9,16 @@ import Pyramid
 from Entity import Entity, BoundingBox
 import Humain
 import math
+import glfw
 import pyrr
 
 def main():
     viewer = ViewerGL()
 
     # Cam
-    viewer.set_camera(Camera())
+    # cam = Camera(viewer,mouseX_middle = glfw.get_window_size(viewer.window)[0],mouseY_middle = glfw.get_window_size(viewer.window)[1])
+    cam = Camera(viewer)
+    viewer.set_camera(cam)
     viewer.cam.transformation.translation.y = 0.75
     viewer.cam.transformation.rotation_center = viewer.cam.transformation.translation.copy()
 
