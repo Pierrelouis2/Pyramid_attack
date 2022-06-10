@@ -96,7 +96,6 @@ class Camera:
         elif self.first_mouse == True:
             self.first_mouse = False
             glfw.set_cursor_pos(self.viewer.window,400,400)
-        print(self.viewer.cam.transformation.rotation_euler[pyrr.euler.index().roll])
 
     def update(self):
         self.viewer.cam.transformation.rotation_euler[pyrr.euler.index().roll] += self.mouse_dY/200

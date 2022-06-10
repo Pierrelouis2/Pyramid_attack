@@ -56,7 +56,7 @@ def main():
     dic_obj["cube_arrow"].apply_matrix(pyrr.matrix44.create_from_scale([0.25, 0.25, 0.25, 1]))
     dic_obj["line"] = Mesh.load_obj("Textures/cube.obj")
     dic_obj["line"].normalize()
-    dic_obj["line"].apply_matrix(pyrr.matrix44.create_from_scale([0.01, 0.01, 2, 1]))
+    dic_obj["line"].apply_matrix(pyrr.matrix44.create_from_scale([0.01, 0.01, 20, 1]))
 
     dic_obj["arrow"] = Mesh.load_obj("Textures/arrow.obj")
     dic_obj["arrow"].normalize()
@@ -107,6 +107,7 @@ def main():
     #Test "line"
     line = Entity(vie = 1, coord=[0,0,0], rot=[0,0,0], obj=dic_obj["line"],texture=dic_text["line"],viewer=viewer, vao_obj = dic_vao["line"],name="line")
     line.create()
+    line.object.transformation.rotation_center = humain.object.transformation.rotation_center
     viewer.line = line
     # Text Pause
     vao_obj = Text.initalize_geometry()
