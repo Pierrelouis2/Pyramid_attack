@@ -9,11 +9,8 @@ import Pyramid
 import Entity
 import Humain
 import math
-<<<<<<< HEAD
 import glfw
-=======
 import pyrr
->>>>>>> b50efbecb2810b5f18a8f61770df06b7351a07f7
 
 def main():
     viewer = ViewerGL()
@@ -60,10 +57,6 @@ def main():
     m.faces = np.array([[0, 1, 2], [0, 2, 3]], np.uint32)
     dic_obj["sol"] = m
 
-<<<<<<< HEAD
-
-# Spawn Pyramide
-=======
     dic_vao["humain"] = dic_obj["humain"].load_to_gpu()
     dic_vao["pyramid"] = dic_obj["pyramid"].load_to_gpu()
     dic_vao["sol"] = dic_obj["sol"].load_to_gpu()
@@ -76,7 +69,6 @@ def main():
     humain.create()
 
     # Spawn Pyramide
->>>>>>> b50efbecb2810b5f18a8f61770df06b7351a07f7
     nbr_pyramide = 10
     lst_pyramide = []
     rayon = 10
