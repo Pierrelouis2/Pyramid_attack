@@ -83,10 +83,12 @@ class Camera:
             if (x != 400 or y != 400) :
                 self.mouse_dX = x - 400
                 self.mouse_dY = y - 400
-                if -0.46000000000000023>=self.viewer.cam.transformation.rotation_euler[pyrr.euler.index().roll] + self.mouse_dY/200:
+                if -0.46000000000000023 >= self.viewer.cam.transformation.rotation_euler[pyrr.euler.index().roll] + self.mouse_dY/200:
                     self.mouse_dY = 0
-                elif self.viewer.cam.transformation.rotation_euler[pyrr.euler.index().roll]>= math.pi/2 and self.mouse_dY>0:
+                    self.viewer.cam.transformation.rotation_euler[pyrr.euler.index().roll] = -0.46000000000000023
+                elif 1.31 <= self.viewer.cam.transformation.rotation_euler[pyrr.euler.index().roll] + self.mouse_dY/200:
                     self.mouse_dY = 0
+                    self.viewer.cam.transformation.rotation_euler[pyrr.euler.index().roll] = 1.31
                 self.update()
                 if self.mouse_dX >0:
                     self.viewer.objs[0].transformation.rotation_euler[pyrr.euler.index().yaw] += self.mouse_dX/100
