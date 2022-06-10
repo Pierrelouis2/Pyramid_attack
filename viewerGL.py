@@ -10,7 +10,7 @@ from cpe3d import Object3D
 import Pyramid
 import pymeshlab as mlab
 
-
+ 
 class ViewerGL:
     def __init__(self):
         # initialisation de la librairie GLFW
@@ -204,5 +204,3 @@ class ViewerGL:
             pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(
                 self.objs[0].transformation.rotation_euler), pyrr.Vector3([0, self.velocityY * self.dt, 0]))
         self.accelerationY = self.gravity
-
-        
