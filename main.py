@@ -42,6 +42,8 @@ def main():
     dic_obj["cube"] = Mesh.load_obj("Textures/cube.obj")
     dic_obj["cube"].normalize()
 
+    viewer.dic_obj = dic_obj
+    viewer.dic_text = dic_text
 
     #chargement sol
     m = Mesh()
@@ -81,7 +83,7 @@ def main():
     # Text Pause
     vao_obj = Text.initalize_geometry()
     texture = glutils.load_texture('Textures/fontB.jpg')
-    text_pause = Text('Pause', np.array([-0.8, 0.3], np.float32), np.array([0.8, 0.8], np.float32), vao_obj, 2, viewer.programme3d_id, texture)
+    text_pause = Text('Pause', np.array([-0.8, 0.3], np.float32), np.array([0.8, 0.8], np.float32), vao_obj, 2, viewer.program3d_id, texture)
     viewer.text_pause = text_pause
 
 

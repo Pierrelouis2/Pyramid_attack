@@ -74,8 +74,8 @@ class BoundingBox:
         self.entity_bound = entity
         self.position = entity.object.transformation.translation
         self.coord = entity.coord
-        self.obj = entity.dict_obj["cube"]
-        self.texture = entity.dict_text["cube"]
+        self.obj = entity.viewer.dic_obj["cube"]
+        self.texture = entity.viewer.dic_text["cube"]
 
     def create(self):
         self.obj.apply_matrix(pyrr.matrix44.create_from_scale(self.scale))
