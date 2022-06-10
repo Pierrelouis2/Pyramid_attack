@@ -1,5 +1,4 @@
 
-from curses import COLOR_RED
 from Entity import Entity, BoundingBox
 import math
 
