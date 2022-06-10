@@ -9,7 +9,6 @@ import Pyramid
 import Entity
 import Humain
 import math
-import pymeshlab as mlab
 
 
 def main():
