@@ -19,10 +19,8 @@ def main():
     viewer.cam.transformation.translation.y = 0.75
     viewer.cam.transformation.rotation_center = viewer.cam.transformation.translation.copy()
 
-    program3d_id = glutils.create_program_from_file(
-        'vert/shader.vert', 'frag/shader.frag')
-    programGUI_id = glutils.create_program_from_file(
-        'vert/gui.vert', 'frag/gui.frag')
+    program3d_id = glutils.create_program_from_file('vert/shader.vert', 'frag/shader.frag')
+    programGUI_id = glutils.create_program_from_file('vert/gui.vert', 'frag/gui.frag')
 
     dic_text = {}
     dic_obj = {}
@@ -50,8 +48,7 @@ def main():
     p0, p1, p2, p3 = [-25, 0, -25], [25, 0, -25], [25, 0, 25], [-25, 0, 25]
     n, c = [0, 1, 0], [1, 1, 1]
     t0, t1, t2, t3 = [0, 0], [1, 0], [1, 1], [0, 1]
-    m.vertices = np.array([[p0 + n + c + t0], [p1 + n + c + t1],
-                          [p2 + n + c + t2], [p3 + n + c + t3]], np.float32)
+    m.vertices = np.array([[p0 + n + c + t0], [p1 + n + c + t1],[p2 + n + c + t2], [p3 + n + c + t3]], np.float32)
     m.faces = np.array([[0, 1, 2], [0, 2, 3]], np.uint32)
     dic_obj["sol"] = m
 
