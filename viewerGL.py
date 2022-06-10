@@ -9,7 +9,7 @@ import numpy as np
 from cpe3d import Object3D
 import Pyramid
 import pymeshlab as mlab
-
+import arrow
  
 class ViewerGL:
     def __init__(self):
@@ -72,7 +72,8 @@ class ViewerGL:
                 self.update_key()
 
                 self.gravitation()
-
+                for proj in self.objs_projectile :
+                    proj.mov_arrow()
             else:
                 GL.glClearColor(0.2, 0.2, 0.2, 0.5)
                 self.text_pause.draw()
@@ -104,8 +105,6 @@ class ViewerGL:
     def add_object_pyamide(self, obj):
         self.objs_pyramide.append(obj)
 
-    def add_object_projectile(self, obj):
-        self.objs_projectile.append(obj)
     
     def add_bounding_box(self, obj):
         self.objs_bounding_boxes.append(obj)
@@ -184,6 +183,9 @@ class ViewerGL:
             # on peut choisir l'offset lorsque l'on suit l'objet
             self.cam.transformation.translation = self.objs[0].transformation.translation + pyrr.Vector3([0, 0.75, 2.556])
 
+        if glfw.KEY_X in self.touch and self.touch[glfw.KEY_X]> 0 :
+            self.shoot()
+
     def gravitation(self):
         # TODO Faire autre chose que quitter la fct
         self.velocityY += self.accelerationY * self.dt
@@ -202,3 +204,15 @@ class ViewerGL:
         self.objs[0].transformation.translation += \
             pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(self.objs[0].transformation.rotation_euler), pyrr.Vector3([0, self.velocityY * self.dt, 0]))
         self.accelerationY = self.gravity
+
+
+    def shoot(self) :
+        proj = arrow.Arrow(vie=1, coord=[0, 3, 0], rot=[0,0,0], obj=self.dic_obj["arrow"],
+                            texture=self.dic_text["arrow"], viewer=self, name="arrow",vao_obj=self.dic_vao["arrow"])
+        proj.create()
+        proj.object.transformation.rotation_euler[pyrr.euler.index().yaw] = self.objs_humain.object.transformation.rotation_euler[pyrr.euler.index().yaw]
+
+        proj.object.transformation.rotation_euler[pyrr.euler.index().roll] = self.objs_humain.object.transformation.rotation_euler[pyrr.euler.index().roll]
+        self.objs_projectile.append(proj)
+
+        print(self.objs_projectile)

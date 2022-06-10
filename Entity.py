@@ -46,7 +46,6 @@ class Entity():
 
             tr.rotation_center.x = self.rot[0]
             tr.rotation_center.y = self.rot[1]
-            tr.rotation_center.z = self.rot[2]
 
 
             self.object = Object3D(self.vao, self.obj.get_nb_triangles(),
@@ -59,8 +58,7 @@ class Entity():
         self.viewer.add_object(self.object)
         if self.name == "pyramide":
             self.viewer.add_object_pyamide(self)
-        if self.name == "projectile":
-            self.viewer.add_object_projectile(self.object)
+
         if self.name == "humain" :
             self.viewer.add_humain(self)
         

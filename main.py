@@ -32,15 +32,23 @@ def main():
     dic_text["sol"] = glutils.load_texture("Textures/TextureSand.jpeg")
     dic_text["humain"] = glutils.load_texture("Textures/multicolor.png")
     dic_text["cube"] = glutils.load_texture("Textures/cube.png")
+    dic_text["arrow"] = glutils.load_texture("Textures/multicolor.png")
     
     dic_obj["pyramid"] = Mesh.load_obj("Textures/pyramid.obj")
     dic_obj["pyramid"].normalize()
     dic_obj["pyramid"].apply_matrix(pyrr.matrix44.create_from_scale([0.25, 0.25, 0.25, 1]))
+
     dic_obj["humain"] = Mesh.load_obj("Textures/homme.obj")
     dic_obj["humain"].normalize()
     dic_obj["humain"].apply_matrix(pyrr.matrix44.create_from_scale([0.5, 0.5, 0.5, 1]))
+
     dic_obj["cube"] = Mesh.load_obj("Textures/cube.obj")
     dic_obj["cube"].normalize()
+
+    dic_obj["arrow"] = Mesh.load_obj("Textures/arrow.obj")
+    dic_obj["arrow"].normalize()
+    dic_obj["arrow"].apply_matrix(pyrr.matrix44.create_from_scale([1, 1, 0.15, 1]))
+
 
     viewer.dic_obj = dic_obj
     viewer.dic_text = dic_text
@@ -54,11 +62,10 @@ def main():
     m.faces = np.array([[0, 1, 2], [0, 2, 3]], np.uint32)
     dic_obj["sol"] = m
 
-    dic_vao["humain"] = dic_obj["humain"].load_to_gpu()
-    dic_vao["pyramid"] = dic_obj["pyramid"].load_to_gpu()
-    dic_vao["sol"] = dic_obj["sol"].load_to_gpu()
-    dic_vao["cube"] = dic_obj["cube"].load_to_gpu()
+    for i in dic_obj :
+        dic_vao[i] = dic_obj[i].load_to_gpu()
 
+    viewer.dic_vao = dic_vao
     #------------------------Fin Chargements des textures + objs ---------------------------
     # humain
     humain = Humain.Humain(vie=1, coord=[0, 0, 0], rot=[0, 0, 0], obj=dic_obj["humain"],
@@ -80,6 +87,8 @@ def main():
     sol  = Entity.Entity(vie=1, coord=[0,0,0], rot=[0,0,0], obj=dic_obj["sol"],texture=dic_text["sol"],viewer=viewer,vao_obj = dic_vao["sol"],name="sol")
     sol.create()
 
+    #Test arrow
+    
     # Text Pause
     vao_obj = Text.initalize_geometry()
     texture = glutils.load_texture('Textures/fontB.jpg')
