@@ -77,7 +77,6 @@ class Camera:
         # glfw.set_input_mode(self.viewer.window, glfw.CURSOR, glfw.CURSOR_HIDDEN)
 
     def cursor_pos_callback(self, window, x, y):
-        print(x, y)
         if x != 400 or y != 400:
             self.mouse_dX = x - 400
             self.mouse_dY = y - 400

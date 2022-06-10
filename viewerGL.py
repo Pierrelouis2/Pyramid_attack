@@ -71,10 +71,11 @@ class ViewerGL:
                 for pyramid in self.objs_pyramide:
                     pyramid.mouvement(self.objs_humain)
                     pyramid.move_BB()
+                #gestion BoundingBox
                 if self.bool_draw_bounding_boxes:
                     for bb in self.objs_bounding_boxes:
                         bb.draw()
-
+                    self.objs_humain.move_BB()
                 self.update_key()
                 self.gravitation()
 
@@ -116,7 +117,7 @@ class ViewerGL:
         self.objs_bounding_boxes.append(obj)
 
     def add_humain(self, obj):
-        self.objs_humain =obj
+        self.objs_humain = obj
 
     def set_camera(self, cam):
         self.cam = cam

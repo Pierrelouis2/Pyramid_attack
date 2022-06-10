@@ -42,10 +42,16 @@ def main():
     dic_obj["humain"] = Mesh.load_obj("Textures/homme.obj")
     dic_obj["humain"].normalize()
     dic_obj["humain"].apply_matrix(pyrr.matrix44.create_from_scale([0.5, 0.5, 0.5, 1]))
-    dic_obj["cube"] = Mesh.load_obj("Textures/cube.obj")
-    dic_obj["cube"].normalize()
-    dic_obj["cube"].apply_matrix(pyrr.matrix44.create_from_scale([0.25, 0.25, 0.25, 1]))
-    
+    #bounding_box
+    dic_obj["cube_pyramid"] = Mesh.load_obj("Textures/cube.obj")
+    dic_obj["cube_pyramid"].normalize()
+    dic_obj["cube_pyramid"].apply_matrix(pyrr.matrix44.create_from_scale([0.25, 0.25, 0.25, 1]))
+    dic_obj["cube_humain"] = Mesh.load_obj("Textures/cube.obj")
+    dic_obj["cube_humain"].normalize()
+    dic_obj["cube_humain"].apply_matrix(pyrr.matrix44.create_from_scale([0.2, 0.5, 0.2, 1]))
+    dic_obj["cube_arrow"] = Mesh.load_obj("Textures/cube.obj")
+    dic_obj["cube_arrow"].normalize()
+    dic_obj["cube_arrow"].apply_matrix(pyrr.matrix44.create_from_scale([0.25, 0.25, 0.25, 1]))
 
     viewer.dic_obj = dic_obj
     viewer.dic_text = dic_text
@@ -62,7 +68,10 @@ def main():
     dic_vao["humain"] = dic_obj["humain"].load_to_gpu()
     dic_vao["pyramid"] = dic_obj["pyramid"].load_to_gpu()
     dic_vao["sol"] = dic_obj["sol"].load_to_gpu()
-    dic_vao["cube"] = dic_obj["cube"].load_to_gpu()
+    dic_vao["cube_pyramid"] = dic_obj["cube_pyramid"].load_to_gpu()
+    dic_vao["cube_humain"] = dic_obj["cube_humain"].load_to_gpu()
+    dic_vao["cube_arrow"] = dic_obj["cube_arrow"].load_to_gpu()
+
     viewer.dic_vao = dic_vao
 
     #------------------------Fin Chargements des textures + objs ---------------------------
@@ -81,7 +90,7 @@ def main():
     for i in range(nbr_pyramide):
         teta = rand.randint(0, 10)
         pyramide = Pyramid.Pyramid(vie=1, coord=[rayon * math.cos(teta), 0, rayon * math.sin(teta)], rot=[0, 0, 0], obj=dic_obj["pyramid"],
-                                   texture=dic_text["pyramid"], viewer=viewer, name="pyramide",vao_obj = dic_vao["pyramid"])
+                                   texture=dic_text["pyramid"], viewer=viewer, name="pyramid",vao_obj = dic_vao["pyramid"])
         lst_pyramide.append(pyramide)
         pyramide.create()
         pyramide.create_BB()
@@ -92,13 +101,12 @@ def main():
 
     # Text Pause
     vao_obj = Text.initalize_geometry()
-    texture = glutils.load_texture('Textures/fontB.jpg')
-    text_pause = Text('Pause', np.array([-0.8, 0.3], np.float32), np.array([0.8, 0.8], np.float32), vao_obj, 2, viewer.program3d_id, texture)
+    texture = glutils.load_texture('Textures/fontB2.png')
+    text_pause = Text('Pause', np.array([-0.8, 0.3], np.float32), np.array([0.8, 0.8], np.float32), vao_obj, 2, viewer.programGUI_id, texture)
     viewer.text_pause = text_pause
 
 
     viewer.run()
-
 
 
 if __name__ == '__main__':
