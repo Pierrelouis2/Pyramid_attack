@@ -8,14 +8,13 @@ import pyrr
 import numpy as np
 from cpe3d import Object3D, Camera
 import Pyramid
-
-
+import arrow
  
 class ViewerGL:
     def __init__(self):
         # initialisation de la librairie GLFW
         glfw.init()
-        # paramétrage du context OpenGL
+        # parametrage du context OpenGL
         glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 3)
         glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 3)
         glfw.window_hint(glfw.OPENGL_FORWARD_COMPAT, GL.GL_TRUE)
@@ -43,6 +42,7 @@ class ViewerGL:
 
         self.lock_cam = True
         self.pause = False
+        self.bool_draw_bounding_boxes = False
 
         # pour faire un saut de 1 metre: (voir jumpforce.py)
         self.jumping_force = 19910
@@ -67,12 +67,18 @@ class ViewerGL:
                     if isinstance(obj, Object3D):
                         self.update_camera(obj.program)
                     obj.draw()
-                for i in self.objs_pyramide:
-                    i.mouvement(self.objs_humain)
+                for pyramid in self.objs_pyramide:
+                    pyramid.mouvement(self.objs_humain)
+                    pyramid.move_BB()
+                #gestion BoundingBox
+                if self.bool_draw_bounding_boxes:
+                    for bb in self.objs_bounding_boxes:
+                        bb.draw()
+                    self.objs_humain.move_BB()
                 self.update_key()
-
                 self.gravitation()
-
+                for proj in self.objs_projectile :
+                    proj.mov_arrow()
             else:
                 GL.glClearColor(0.2, 0.2, 0.2, 0.5)
                 self.text_pause.draw()
@@ -104,14 +110,12 @@ class ViewerGL:
     def add_object_pyamide(self, obj):
         self.objs_pyramide.append(obj)
 
-    def add_object_projectile(self, obj):
-        self.objs_projectile.append(obj)
     
     def add_bounding_box(self, obj):
         self.objs_bounding_boxes.append(obj)
-        
+
     def add_humain(self, obj):
-        self.objs_humain =obj
+        self.objs_humain = obj
 
     def set_camera(self, cam):
         self.cam = cam
@@ -171,6 +175,8 @@ class ViewerGL:
             if not self.bool_jumping:
                 self.bool_jumping = True
                 self.accelerationY += self.jumping_force/self.weight
+        if glfw.KEY_B in self.touch and self.touch[glfw.KEY_B] > 0:
+            self.bool_draw_bounding_boxes = not self.bool_draw_bounding_boxes
 
         if glfw.KEY_I in self.touch and self.touch[glfw.KEY_I] > 0:
             self.cam.transformation.rotation_euler[pyrr.euler.index().roll] -= 0.02
@@ -187,6 +193,9 @@ class ViewerGL:
             self.cam.transformation.rotation_center = self.objs[0].transformation.translation + self.objs[0].transformation.rotation_center
             # on peut choisir l'offset lorsque l'on suit l'objet
             self.cam.transformation.translation = self.objs[0].transformation.translation + pyrr.Vector3([0, 0.75, 2.556])
+
+        if glfw.KEY_X in self.touch and self.touch[glfw.KEY_X]> 0 :
+            self.shoot()
 
     def gravitation(self):
         # TODO Faire autre chose que quitter la fct
@@ -206,3 +215,15 @@ class ViewerGL:
         self.objs[0].transformation.translation += \
             pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(self.objs[0].transformation.rotation_euler), pyrr.Vector3([0, self.velocityY * self.dt, 0]))
         self.accelerationY = self.gravity
+
+
+    def shoot(self) :
+        proj = arrow.Arrow(vie=1, coord=[0, 3, 0], rot=[0,0,0], obj=self.dic_obj["arrow"],
+                            texture=self.dic_text["arrow"], viewer=self, name="arrow",vao_obj=self.dic_vao["arrow"])
+        proj.create()
+        proj.object.transformation.rotation_euler[pyrr.euler.index().yaw] = self.objs_humain.object.transformation.rotation_euler[pyrr.euler.index().yaw]
+
+        proj.object.transformation.rotation_euler[pyrr.euler.index().roll] = self.objs_humain.object.transformation.rotation_euler[pyrr.euler.index().roll]
+        self.objs_projectile.append(proj)
+
+        print(self.objs_projectile)
