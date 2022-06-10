@@ -82,8 +82,6 @@ def main():
                            texture=dic_text["humain"], viewer=viewer, name="humain",vao_obj=dic_vao["humain"])
     humain.create()
     humain.object.transformation.rotation_euler[pyrr.euler.index().yaw] = math.pi
-    humain.bounding_box = BoundingBox(humain)
-    humain.bounding_box.create()
 
     # Spawn Pyramide
     nbr_pyramide = 10
@@ -95,7 +93,7 @@ def main():
                                    texture=dic_text["pyramid"], viewer=viewer, name="pyramid",vao_obj = dic_vao["pyramid"])
         lst_pyramide.append(pyramide)
         pyramide.create()
-        pyramide.create_BB()
+        #pyramide.create_BB()
 
     # Sol
     sol  = Entity(vie=1, coord=[0,0,0], rot=[0,0,0], obj=dic_obj["sol"],texture=dic_text["sol"],viewer=viewer,vao_obj = dic_vao["sol"],name="sol")

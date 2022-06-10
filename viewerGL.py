@@ -69,6 +69,8 @@ class ViewerGL:
                     obj.draw()
                 for pyramid in self.objs_pyramide:
                     pyramid.mouvement(self.objs_humain)
+                    if pyramid.bounding_box.intersect(self.objs_humain.object.transformation.translation):
+                        print("intersect")
                     pyramid.move_BB()
                 #gestion BoundingBox
                 if self.bool_draw_bounding_boxes:
@@ -157,27 +159,28 @@ class ViewerGL:
         GL.glUniformMatrix4fv(loc, 1, GL.GL_FALSE, self.cam.projection)
 
     def update_key(self):
-        if glfw.KEY_UP in self.touch and self.touch[glfw.KEY_UP] > 0:
+        #mouvement joueur
+        if glfw.KEY_W in self.touch and self.touch[glfw.KEY_W] > 0:
             self.objs[0].transformation.translation += \
-                pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(
-                    self.objs[0].transformation.rotation_euler), pyrr.Vector3([0, 0, self.delta_posX]))
-
-        if glfw.KEY_DOWN in self.touch and self.touch[glfw.KEY_DOWN] > 0:
+                pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(self.objs[0].transformation.rotation_euler), pyrr.Vector3([0, 0, self.delta_posX]))
+        if glfw.KEY_S in self.touch and self.touch[glfw.KEY_S] > 0:
             self.objs[0].transformation.translation -= \
-                pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(
-                    self.objs[0].transformation.rotation_euler), pyrr.Vector3([0, 0, self.delta_posX]))
-        if glfw.KEY_LEFT in self.touch and self.touch[glfw.KEY_LEFT] > 0:
-            self.objs[0].transformation.rotation_euler[pyrr.euler.index().yaw] -= 0.1
-        if glfw.KEY_RIGHT in self.touch and self.touch[glfw.KEY_RIGHT] > 0:
-            self.objs[0].transformation.rotation_euler[pyrr.euler.index().yaw] += 0.1
-
+                pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(self.objs[0].transformation.rotation_euler), pyrr.Vector3([0, 0, self.delta_posX]))
+        if glfw.KEY_A in self.touch and self.touch[glfw.KEY_A] > 0:
+            self.objs[0].transformation.translation += \
+                pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(self.objs[0].transformation.rotation_euler), pyrr.Vector3([self.delta_posX, 0, 0]))
+        if glfw.KEY_D in self.touch and self.touch[glfw.KEY_D] > 0:
+            self.objs[0].transformation.translation -= \
+                pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(self.objs[0].transformation.rotation_euler), pyrr.Vector3([self.delta_posX, 0, 0]))
+        #jumping
         if glfw.KEY_SPACE in self.touch and self.touch[glfw.KEY_SPACE] > 0:
             if not self.bool_jumping:
                 self.bool_jumping = True
                 self.accelerationY += self.jumping_force/self.weight
+        #affichage BoundingBox
         if glfw.KEY_B in self.touch and self.touch[glfw.KEY_B] > 0:
             self.bool_draw_bounding_boxes = not self.bool_draw_bounding_boxes
-
+        #Rotation camera 3P
         if glfw.KEY_I in self.touch and self.touch[glfw.KEY_I] > 0:
             self.cam.transformation.rotation_euler[pyrr.euler.index().roll] -= 0.02
         if glfw.KEY_K in self.touch and self.touch[glfw.KEY_K] > 0:
@@ -186,14 +189,12 @@ class ViewerGL:
             self.cam.transformation.rotation_euler[pyrr.euler.index().yaw] -= 0.02
         if glfw.KEY_L in self.touch and self.touch[glfw.KEY_L] > 0:
             self.cam.transformation.rotation_euler[pyrr.euler.index().yaw] += 0.02
-
+        # choix 1P ou 3P
         if self.lock_cam:
-        #     self.cam.transformation.rotation_euler = self.objs[0].transformation.rotation_euler.copy()
-        #    self.cam.transformation.rotation_euler[pyrr.euler.index().yaw] += np.pi
             self.cam.transformation.rotation_center = self.objs[0].transformation.translation + self.objs[0].transformation.rotation_center
             # on peut choisir l'offset lorsque l'on suit l'objet
             self.cam.transformation.translation = self.objs[0].transformation.translation + pyrr.Vector3([0, 0.75, 2.556])
-
+        # Shoot
         if glfw.KEY_X in self.touch and self.touch[glfw.KEY_X]> 0 :
             self.shoot()
 
