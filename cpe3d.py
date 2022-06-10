@@ -2,7 +2,7 @@ import OpenGL.GL as GL
 import pyrr
 import numpy as np
 import glfw
-
+import math
 
 
 class Transformation3D:
@@ -74,16 +74,23 @@ class Camera:
         self.mouse_dX = 0
         self.mouse_dY = 0
         self.viewer = viewer
-        # glfw.set_input_mode(self.viewer.window, glfw.CURSOR, glfw.CURSOR_HIDDEN)
-
+        glfw.set_input_mode(self.viewer.window, glfw.CURSOR, glfw.CURSOR_HIDDEN)
+        self.first_mouse = True
     def cursor_pos_callback(self, window, x, y):
-        print(x, y)
-        if x != 400 or y != 400:
-            self.mouse_dX = x - 400
-            self.mouse_dY = y - 400
-            self.update()
+        if self.first_mouse == False:
+            if (x != 400 or y != 400) :
+                self.mouse_dX = x - 400
+                self.mouse_dY = y - 400
+                self.update()
+                if self.mouse_dX >0:
+                    self.viewer.objs[0].transformation.rotation_euler[pyrr.euler.index().yaw] += self.mouse_dX/100
+                elif self.mouse_dX<0:
+                    self.viewer.objs[0].transformation.rotation_euler[pyrr.euler.index().yaw] += self.mouse_dX/100
+                glfw.set_cursor_pos(self.viewer.window,400,400)
+        if self.first_mouse == True:
+            self.first_mouse = False
             glfw.set_cursor_pos(self.viewer.window,400,400)
-            
+
     def update(self):
         self.viewer.cam.transformation.rotation_euler[pyrr.euler.index().roll] += self.mouse_dY/200
         self.viewer.cam.transformation.rotation_euler[pyrr.euler.index().yaw] += self.mouse_dX/100

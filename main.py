@@ -16,7 +16,6 @@ def main():
     viewer = ViewerGL()
 
     # Cam
-    # cam = Camera(viewer,mouseX_middle = glfw.get_window_size(viewer.window)[0],mouseY_middle = glfw.get_window_size(viewer.window)[1])
     cam = Camera(viewer)
     viewer.set_camera(cam)
     viewer.cam.transformation.translation.y = 0.75
@@ -67,7 +66,7 @@ def main():
     humain = Humain.Humain(vie=1, coord=[0, 0, 0], rot=[0, 0, 0], obj=dic_obj["humain"],
                            texture=dic_text["humain"], viewer=viewer, name="humain",vao_obj=dic_vao["humain"])
     humain.create()
-
+    humain.object.transformation.rotation_euler[pyrr.euler.index().yaw] = math.pi
     # Spawn Pyramide
     nbr_pyramide = 10
     lst_pyramide = []
