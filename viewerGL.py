@@ -27,6 +27,8 @@ class ViewerGL:
         self.window = glfw.create_window(800, 800, 'OpenGL', None, None)
         # paramétrage de la fonction de gestion des évènements
         glfw.set_key_callback(self.window, self.key_callback)
+
+        
         # activation du context OpenGL pour la fenêtre
         glfw.make_context_current(self.window)
         glfw.swap_interval(1)
@@ -214,6 +216,10 @@ class ViewerGL:
             self.cam.transformation.translation = self.objs_humain.object.transformation.translation + pyrr.Vector3([0, 0.75, 2.556])
         # Shoot
         if glfw.KEY_X in self.touch and self.touch[glfw.KEY_X]> 0 :
+            self.shoot()
+
+        state = glfw.get_mouse_button(self.window, glfw.MOUSE_BUTTON_LEFT);
+        if (state == glfw.PRESS) :
             self.shoot()
 
     def gravitation(self):
