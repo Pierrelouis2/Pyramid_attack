@@ -11,6 +11,7 @@ from cpe3d import Object3D, Camera
 import Pyramid
 import arrow
 import math
+import time
  
 class ViewerGL:
     def __init__(self):
@@ -45,6 +46,11 @@ class ViewerGL:
         self.lock_cam = True
         self.pause = False
         self.bool_draw_bounding_boxes = False
+
+        self.timer_shoot = 1
+        self.time_last_shoot = 0
+        self.timer_BB = 0.4
+        self.time_last_BB = 0
 
         # pour faire un saut de 1 metre: (voir jumpforce.py)
         self.jumping_force = 19910
@@ -87,7 +93,7 @@ class ViewerGL:
                 if self.bool_draw_bounding_boxes:
                     for bb in self.objs_bounding_boxes:
                         bb.object.draw()
-                        
+
                 self.update_key()
                 self.gravitation()
                 self.update_line()
@@ -189,7 +195,9 @@ class ViewerGL:
                 self.accelerationY += self.jumping_force/self.weight
         #affichage BoundingBox
         if glfw.KEY_B in self.touch and self.touch[glfw.KEY_B] > 0:
-            self.bool_draw_bounding_boxes = not self.bool_draw_bounding_boxes
+            if self.time_last_BB + self.timer_BB <= time.time():
+                self.bool_draw_bounding_boxes = not self.bool_draw_bounding_boxes
+                self.time_last_BB = time.time()
         #Rotation camera 3P
         if glfw.KEY_I in self.touch and self.touch[glfw.KEY_I] > 0:
             self.cam.transformation.rotation_euler[pyrr.euler.index().roll] -= 0.02
@@ -229,13 +237,14 @@ class ViewerGL:
 
 
     def shoot(self) :
-        proj = arrow.Arrow(vie=1, coord=self.objs_humain.object.transformation.translation, rot=[0,0,0], obj=self.dic_obj["arrow"],texture=self.dic_text["arrow"], viewer=self, name="arrow",vao_obj=self.dic_vao["arrow"])
-        proj.size = 1
-        proj.create()
-        proj.object.transformation.translation.y += self.objs_humain.object.transformation.translation.y +0.1
-        proj.object.transformation.rotation_euler[pyrr.euler.index().yaw] = self.objs_humain.object.transformation.rotation_euler[pyrr.euler.index().yaw] + math.pi/2
-        proj.object.transformation.rotation_euler[pyrr.euler.index().roll] = -self.cam.transformation.rotation_euler[pyrr.euler.index().roll]
-        self.objs_projectile.append(proj)
+        if self.time_last_shoot + self.timer_shoot <= time.time() :
+            proj = arrow.Arrow(vie=1, coord=self.objs_humain.object.transformation.translation, rot=[0,0,0], obj=self.dic_obj["arrow"],texture=self.dic_text["arrow"], viewer=self, name="arrow",vao_obj=self.dic_vao["arrow"])
+            proj.create()
+            proj.object.transformation.translation.y += self.objs_humain.object.transformation.translation.y +0.1
+            proj.object.transformation.rotation_euler[pyrr.euler.index().yaw] = self.objs_humain.object.transformation.rotation_euler[pyrr.euler.index().yaw] + math.pi/2
+            proj.object.transformation.rotation_euler[pyrr.euler.index().roll] = -self.cam.transformation.rotation_euler[pyrr.euler.index().roll]
+            self.objs_projectile.append(proj)
+            self.time_last_shoot = time.time()
 
     def update_line(self):
         self.line.object.transformation.translation = self.objs_humain.object.transformation.translation + 0.1

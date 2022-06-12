@@ -83,7 +83,6 @@ def main():
 
     # humain
     humain = Humain.Humain(vie=10, coord=[0, 0, 0], rot=[0, 0, 0], obj=dic_obj["humain"],texture=dic_text["humain"], viewer=viewer, name="humain",vao_obj=dic_vao["humain"])
-    humain.size = 0.5
     humain.create()
     # il faut mettre l'humain a l'endroit
     humain.object.transformation.rotation_euler[pyrr.euler.index().yaw] = math.pi
@@ -96,7 +95,6 @@ def main():
         teta = rand.randint(0, 10)
         pyramide = Pyramid.Pyramid(vie=1, coord=[rayon * math.cos(teta), 0, rayon * math.sin(teta)], rot=[0, 0, 0], obj=dic_obj["pyramid"],texture=dic_text["pyramid"], viewer=viewer, name="pyramid",vao_obj = dic_vao["pyramid"])
         lst_pyramide.append(pyramide)
-        pyramide.size = 0.25
         pyramide.create()
         #pyramide.create_BB()
 

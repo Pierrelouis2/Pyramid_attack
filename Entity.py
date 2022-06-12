@@ -56,6 +56,7 @@ class Entity():
 
     def move_BB(self):
         self.bounding_box.object.transformation.translation = self.object.transformation.translation
+        self.bounding_box.position = self.object.transformation.translation
         self.bounding_box.object.transformation.rotation_euler[pyrr.euler.index().roll]= self.object.transformation.rotation_euler[pyrr.euler.index().roll]
         self.bounding_box.object.transformation.rotation_euler[pyrr.euler.index().yaw]= self.object.transformation.rotation_euler[pyrr.euler.index().yaw]
 
@@ -71,7 +72,6 @@ class BoundingBox:
         self.coord = entity.coord
         self.obj = entity.viewer.dic_obj[f"cube_{entity.name}"]
         self.texture = entity.viewer.dic_text["cube"]
-        self.size = entity.size
         self.create()
 
     def create(self):
@@ -89,4 +89,6 @@ class BoundingBox:
         return pyrr.vector3.length(self.position-position) <= 1
 
     def intersectB(self,bounding_box):
-        return pyrr.vector3.length(self.position - bounding_box.position) <= 1 + bounding_box.size
+        if pyrr.vector3.length(self.position - bounding_box.position)< 0.5:
+            print(pyrr.vector3.length(self.position - bounding_box.position))
+            return True
