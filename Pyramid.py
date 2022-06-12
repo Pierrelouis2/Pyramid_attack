@@ -17,9 +17,6 @@ class Pyramid(Entity):
     def create_BB(self):
         self.bounding_box = BoundingBox(self)
 
-    # def move_BB(self):
-    #     self.bounding_box.object.transformation.translation = self.object.transformation.translation
-
     def destroy(self):
         self.viewer.objs_bounding_boxes.remove(self.bounding_box)
         self.viewer.objs_pyramide.remove(self)
@@ -33,7 +30,5 @@ class Pyramid(Entity):
             self.destroy()
         for proj in self.viewer.objs_projectile:
             if self.bounding_box.intersectB(proj.bounding_box):
-                print(" col proj")
-                print("truc")
                 self.destroy()
                 proj.destroy()

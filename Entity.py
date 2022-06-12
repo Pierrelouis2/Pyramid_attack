@@ -86,7 +86,7 @@ class BoundingBox:
         self.viewer.add_bounding_box(self)
 
     def intersect(self,position):
-        return pyrr.vector3.length(self.position-position) < 1
+        return pyrr.vector3.length(self.position-position) <= 1
 
     def intersectB(self,bounding_box):
-        return pyrr.vector3.length(self.position - bounding_box.position) <= 1 - bounding_box.size
+        return pyrr.vector3.length(self.position - bounding_box.position) <= 1 + bounding_box.size
