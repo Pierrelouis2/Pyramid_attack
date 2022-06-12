@@ -246,6 +246,7 @@ class ViewerGL:
         if self.time_last_shoot + self.timer_shoot <= time.time() :
             proj = arrow.Arrow(vie=1, coord=self.objs_humain.object.transformation.translation, rot=[0,0,0], obj=self.dic_obj["arrow"],texture=self.dic_text["arrow"], viewer=self, name="arrow",vao_obj=self.dic_vao["arrow"])
             proj.create()
+            proj.size = pyrr.Vector3([0.2, 0.2, 0.15])
             proj.object.transformation.translation.y += self.objs_humain.object.transformation.translation.y +0.1
             proj.object.transformation.rotation_euler[pyrr.euler.index().yaw] = self.objs_humain.object.transformation.rotation_euler[pyrr.euler.index().yaw] + math.pi/2
             proj.object.transformation.rotation_euler[pyrr.euler.index().roll] = -self.cam.transformation.rotation_euler[pyrr.euler.index().roll]

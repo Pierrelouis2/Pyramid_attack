@@ -53,7 +53,7 @@ def main():
     dic_obj["cube_humain"].apply_matrix(pyrr.matrix44.create_from_scale([0.2, 0.5, 0.2, 1]))
     dic_obj["cube_arrow"] = Mesh.load_obj("Textures/cube.obj")
     dic_obj["cube_arrow"].normalize()
-    dic_obj["cube_arrow"].apply_matrix(pyrr.matrix44.create_from_scale([0.25, 0.25, 0.25, 1]))
+    dic_obj["cube_arrow"].apply_matrix(pyrr.matrix44.create_from_scale([0.2, 0.2, 0.15, 1]))
     dic_obj["line"] = Mesh.load_obj("Textures/cube.obj")
     dic_obj["line"].normalize()
     dic_obj["line"].apply_matrix(pyrr.matrix44.create_from_scale([0.01, 0.01, 20, 1]))
@@ -82,8 +82,9 @@ def main():
     #------------------------Fin Chargements des textures + objs ---------------------------
 
     # humain
-    humain = Humain.Humain(vie=10, coord=[0, 0, 0], rot=[0, 0, 0], obj=dic_obj["humain"],texture=dic_text["humain"], viewer=viewer, name="humain",vao_obj=dic_vao["humain"])
+    humain = Humain.Humain(vie=10, coord=[0,0, 0], rot=[0, 0, 0], obj=dic_obj["humain"],texture=dic_text["humain"], viewer=viewer, name="humain",vao_obj=dic_vao["humain"])
     humain.create()
+    humain.size = pyrr.Vector3([0.5, 0.5, 0.5])
     # il faut mettre l'humain a l'endroit
     humain.object.transformation.rotation_euler[pyrr.euler.index().yaw] = math.pi
 
@@ -96,6 +97,7 @@ def main():
         pyramide = Pyramid.Pyramid(vie=1, coord=[rayon * math.cos(teta), 0, rayon * math.sin(teta)], rot=[0, 0, 0], obj=dic_obj["pyramid"],texture=dic_text["pyramid"], viewer=viewer, name="pyramid",vao_obj = dic_vao["pyramid"])
         lst_pyramide.append(pyramide)
         pyramide.create()
+        pyramide.size = pyrr.Vector3([0.25, 0.25, 0.25])
         #pyramide.create_BB()
 
     # Sol

@@ -10,9 +10,6 @@ class Arrow(Entity) :
         out_z = -25 <self.object.transformation.translation.z < 25
         if not out_x or not out_z :
             self.destroy()
-
-    # def move_BB(self):
-    #     self.bounding_box.object.transformation.translation = self.object.transformation.translation
     
     def destroy(self):
         self.viewer.objs_bounding_boxes.remove(self.bounding_box)
