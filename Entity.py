@@ -89,4 +89,6 @@ class BoundingBox:
         return pyrr.vector3.length(self.position-position) < 1
 
     def intersectB(self,bounding_box):
+        if pyrr.vector3.length(self.position - bounding_box.position) <= 1 - bounding_box.size :
+            print("toucher")
         return pyrr.vector3.length(self.position - bounding_box.position) <= 1 - bounding_box.size

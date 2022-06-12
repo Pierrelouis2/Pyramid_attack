@@ -6,6 +6,10 @@ class Arrow(Entity) :
         self.object.transformation.translation += \
             pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(self.object.transformation.rotation_euler), pyrr.Vector3([0.4, 0.0, 0.0]))
         self.move_BB()
+        out_x = -25 <self.object.transformation.translation.x < 25
+        out_z = -25 <self.object.transformation.translation.z < 25
+        if not out_x or not out_z :
+            self.destroy()
 
     # def move_BB(self):
     #     self.bounding_box.object.transformation.translation = self.object.transformation.translation
