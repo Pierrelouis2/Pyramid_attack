@@ -11,7 +11,6 @@ class Humain(Entity):
     def test(self):
         pass
 
-    def move_BB(self):
-        self.bounding_box.object.transformation.translation = self.object.transformation.translation
-        self.bounding_box.object.transformation.rotation_euler[pyrr.euler.index().roll]= self.object.transformation.rotation_euler[pyrr.euler.index().roll]
-        self.bounding_box.object.transformation.rotation_euler[pyrr.euler.index().yaw]= self.object.transformation.rotation_euler[pyrr.euler.index().yaw]
+    def destroy(self):
+        #self.viewer.objs.remove(self)
+        glfw.set_window_should_close(self.viewer.window, glfw.TRUE)

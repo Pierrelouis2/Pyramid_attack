@@ -3,6 +3,7 @@
 from re import X
 from sre_constants import JUMP
 import OpenGL.GL as GL
+import OpenGL
 import glfw
 import pyrr
 import numpy as np
@@ -64,27 +65,32 @@ class ViewerGL:
             GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
             if not self.pause:
                 GL.glClearColor(0.5, 0.6, 0.9, 1.0)
+
+                # affichage des objets
                 for obj in self.objs:
-                    GL.glUseProgram(obj.program)
-                    if isinstance(obj, Object3D):
-                        self.update_camera(obj.program)
-                    obj.draw()
+                    GL.glUseProgram(obj.object.program)
+                    if isinstance(obj.object, Object3D):
+                        self.update_camera(obj.object.program)
+                    obj.object.draw()
+                self.text_life.draw()
+                self.objs_humain.move_BB()
+                
+                # mouvement des prohectiles
+                for proj in self.objs_projectile :
+                    proj.mov_arrow()
+                # mouvement des pyramides + collisions
                 for pyramid in self.objs_pyramide:
                     pyramid.mouvement(self.objs_humain)
-                    if pyramid.bounding_box.intersect(self.objs_humain.object.transformation.translation):
-                        print("intersect")
-                    pyramid.move_BB()
-                #gestion BoundingBox
+                    pyramid.collision()
+
+                # gestion des BoundingBox
                 if self.bool_draw_bounding_boxes:
                     for bb in self.objs_bounding_boxes:
-                        bb.draw()
-                    self.objs_humain.move_BB()
+                        bb.object.draw()
+                        
                 self.update_key()
                 self.gravitation()
                 self.update_line()
-                for proj in self.objs_projectile :
-                    proj.mov_arrow()
-                    proj.move_BB()
 
             else:
                 GL.glClearColor(0.2, 0.2, 0.2, 0.5)
@@ -163,40 +169,19 @@ class ViewerGL:
         GL.glUniformMatrix4fv(loc, 1, GL.GL_FALSE, self.cam.projection)
 
     def update_key(self):
-        if glfw.KEY_W in self.touch and self.touch[glfw.KEY_W] > 0:
-            self.objs[0].transformation.translation += \
-                pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(
-                    self.objs[0].transformation.rotation_euler), pyrr.Vector3([0, 0, self.delta_posX]))
-
-        if glfw.KEY_S in self.touch and self.touch[glfw.KEY_S] > 0:
-            self.objs[0].transformation.translation -= \
-                pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(
-                    self.objs[0].transformation.rotation_euler), pyrr.Vector3([0, 0, self.delta_posX]))
-
-        if glfw.KEY_A in self.touch and self.touch[glfw.KEY_A] > 0:
-            self.objs[0].transformation.translation += \
-                pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(
-                    self.objs[0].transformation.rotation_euler), pyrr.Vector3([self.delta_posY,0,0]))
-
-        if glfw.KEY_D in self.touch and self.touch[glfw.KEY_D] > 0:
-            self.objs[0].transformation.translation -= \
-                pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(
-                    self.objs[0].transformation.rotation_euler), pyrr.Vector3([self.delta_posY,0,0]))
-
-
         #mouvement joueur
         if glfw.KEY_W in self.touch and self.touch[glfw.KEY_W] > 0:
-            self.objs[0].transformation.translation += \
-                pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(self.objs[0].transformation.rotation_euler), pyrr.Vector3([0, 0, self.delta_posX]))
+            self.objs_humain.object.transformation.translation += \
+                pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(self.objs_humain.object.transformation.rotation_euler), pyrr.Vector3([0, 0, self.delta_posX]))
         if glfw.KEY_S in self.touch and self.touch[glfw.KEY_S] > 0:
-            self.objs[0].transformation.translation -= \
-                pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(self.objs[0].transformation.rotation_euler), pyrr.Vector3([0, 0, self.delta_posX]))
+            self.objs_humain.object.transformation.translation -= \
+                pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(self.objs_humain.object.transformation.rotation_euler), pyrr.Vector3([0, 0, self.delta_posX]))
         if glfw.KEY_A in self.touch and self.touch[glfw.KEY_A] > 0:
-            self.objs[0].transformation.translation += \
-                pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(self.objs[0].transformation.rotation_euler), pyrr.Vector3([self.delta_posX, 0, 0]))
+            self.objs_humain.object.transformation.translation += \
+                pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(self.objs_humain.object.transformation.rotation_euler), pyrr.Vector3([self.delta_posX, 0, 0]))
         if glfw.KEY_D in self.touch and self.touch[glfw.KEY_D] > 0:
-            self.objs[0].transformation.translation -= \
-                pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(self.objs[0].transformation.rotation_euler), pyrr.Vector3([self.delta_posX, 0, 0]))
+            self.objs_humain.object.transformation.translation -= \
+                pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(self.objs_humain.object.transformation.rotation_euler), pyrr.Vector3([self.delta_posX, 0, 0]))
         #jumping
         if glfw.KEY_SPACE in self.touch and self.touch[glfw.KEY_SPACE] > 0:
             if not self.bool_jumping:
@@ -216,9 +201,9 @@ class ViewerGL:
             self.cam.transformation.rotation_euler[pyrr.euler.index().yaw] += 0.02
         # choix 1P ou 3P
         if self.lock_cam:
-            self.cam.transformation.rotation_center = self.objs[0].transformation.translation + self.objs[0].transformation.rotation_center
+            self.cam.transformation.rotation_center = self.objs_humain.object.transformation.translation + self.objs_humain.object.transformation.rotation_center
             # on peut choisir l'offset lorsque l'on suit l'objet
-            self.cam.transformation.translation = self.objs[0].transformation.translation + pyrr.Vector3([0, 0.75, 2.556])
+            self.cam.transformation.translation = self.objs_humain.object.transformation.translation + pyrr.Vector3([0, 0.75, 2.556])
         # Shoot
         if glfw.KEY_X in self.touch and self.touch[glfw.KEY_X]> 0 :
             self.shoot()
@@ -227,24 +212,25 @@ class ViewerGL:
         # TODO Faire autre chose que quitter la fct
         self.velocityY += self.accelerationY * self.dt
         # condition a revoir
-        X = self.objs[0].transformation.translation.x
-        Y = self.objs[0].transformation.translation.y
-        Z = self.objs[0].transformation.translation.z
+        X = self.objs_humain.object.transformation.translation.x
+        Y = self.objs_humain.object.transformation.translation.y
+        Z = self.objs_humain.object.transformation.translation.z
 
-        if self.objs[0].transformation.translation.y + self.velocityY * self.dt < 0.5 and not (X > 25 or X < -25) and not (Z > 25 or Z < -25) and Y > -0.5:
+        if self.objs_humain.object.transformation.translation.y + self.velocityY * self.dt < 0.5 and not (X > 25 or X < -25) and not (Z > 25 or Z < -25) and Y > -0.5:
             self.velocityY = 0
             self.bool_jumping = False
-        if self.objs[0].transformation.translation.y < -10:
-            self.objs[0].transformation.translation.x = 0
-            self.objs[0].transformation.translation.y = 0.75
-            self.objs[0].transformation.translation.z = 0
-        self.objs[0].transformation.translation += \
-            pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(self.objs[0].transformation.rotation_euler), pyrr.Vector3([0, self.velocityY * self.dt, 0]))
+        if self.objs_humain.object.transformation.translation.y < -10:
+            self.objs_humain.object.transformation.translation.x = 0
+            self.objs_humain.object.transformation.translation.y = 0.75
+            self.objs_humain.object.transformation.translation.z = 0
+        self.objs_humain.object.transformation.translation += \
+            pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(self.objs_humain.object.transformation.rotation_euler), pyrr.Vector3([0, self.velocityY * self.dt, 0]))
         self.accelerationY = self.gravity
 
 
     def shoot(self) :
         proj = arrow.Arrow(vie=1, coord=self.objs_humain.object.transformation.translation, rot=[0,0,0], obj=self.dic_obj["arrow"],texture=self.dic_text["arrow"], viewer=self, name="arrow",vao_obj=self.dic_vao["arrow"])
+        proj.size = 1
         proj.create()
         proj.object.transformation.translation.y += self.objs_humain.object.transformation.translation.y +0.1
         proj.object.transformation.rotation_euler[pyrr.euler.index().yaw] = self.objs_humain.object.transformation.rotation_euler[pyrr.euler.index().yaw] + math.pi/2

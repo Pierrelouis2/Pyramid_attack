@@ -5,7 +5,7 @@ from cpe3d import Object3D, Camera, Transformation3D, Text
 import numpy as np
 import OpenGL.GL as GL
 import pyrr
-
+import glfw
 
 class Entity():
     """
@@ -45,7 +45,7 @@ class Entity():
         else: 
             self.object = Object3D(self.vao, self.obj.get_nb_triangles(),self.program3d_id, self.texture, Transformation3D())
 
-        self.viewer.add_object(self.object)
+        self.viewer.add_object(self)
         if self.name == "pyramid":
             self.viewer.add_object_pyramide(self)
         if self.name == "humain" :
@@ -53,6 +53,12 @@ class Entity():
 
         if self.name != "sol" and self.name != "line":
             self.bounding_box = BoundingBox(self)
+
+    def move_BB(self):
+        self.bounding_box.object.transformation.translation = self.object.transformation.translation
+        self.bounding_box.object.transformation.rotation_euler[pyrr.euler.index().roll]= self.object.transformation.rotation_euler[pyrr.euler.index().roll]
+        self.bounding_box.object.transformation.rotation_euler[pyrr.euler.index().yaw]= self.object.transformation.rotation_euler[pyrr.euler.index().yaw]
+
 
 
 class BoundingBox:
@@ -65,10 +71,10 @@ class BoundingBox:
         self.coord = entity.coord
         self.obj = entity.viewer.dic_obj[f"cube_{entity.name}"]
         self.texture = entity.viewer.dic_text["cube"]
+        self.size = entity.size
         self.create()
 
     def create(self):
-        #self.obj.apply_matrix(pyrr.matrix44.create_from_scale(self.scale*2))
         tr = Transformation3D()
         tr.translation.x = self.coord[0]
         tr.translation.y = -np.amin(self.obj.vertices, axis=0)[1]
@@ -77,18 +83,10 @@ class BoundingBox:
         tr.rotation_center.y = self.entity.rot[1]
         tr.rotation_center.z = self.entity.rot[2]
         self.object = Object3D(self.entity.viewer.dic_vao[f"cube_{self.entity.name}"], self.obj.get_nb_triangles(),self.viewer.program3d_id, self.texture, tr)
-        self.viewer.add_bounding_box(self.object)
+        self.viewer.add_bounding_box(self)
 
     def intersect(self,position):
         return pyrr.vector3.length(self.position-position) < 1
 
     def intersectB(self,bounding_box):
-        return pyrr.vector3.length(self.position - bounding_box.position) < 1 + bounding_box.position
-
-    def intersectE(self,entity):
-        if entity.object.bounding_box.intersectB(self):
-            for bounding_box in self.viewer.bounding_boxes:
-                if bounding_box.intersectB(self):
-                    return True
-        return False
-
+        return pyrr.vector3.length(self.position - bounding_box.position) <= 1 - bounding_box.size

@@ -82,8 +82,8 @@ def main():
     #------------------------Fin Chargements des textures + objs ---------------------------
 
     # humain
-    humain = Humain.Humain(vie=1, coord=[0, 0, 0], rot=[0, 0, 0], obj=dic_obj["humain"],
-                           texture=dic_text["humain"], viewer=viewer, name="humain",vao_obj=dic_vao["humain"])
+    humain = Humain.Humain(vie=10, coord=[0, 0, 0], rot=[0, 0, 0], obj=dic_obj["humain"],texture=dic_text["humain"], viewer=viewer, name="humain",vao_obj=dic_vao["humain"])
+    humain.size = 0.5
     humain.create()
     # il faut mettre l'humain a l'endroit
     humain.object.transformation.rotation_euler[pyrr.euler.index().yaw] = math.pi
@@ -94,9 +94,9 @@ def main():
     rayon = 10
     for i in range(nbr_pyramide):
         teta = rand.randint(0, 10)
-        pyramide = Pyramid.Pyramid(vie=1, coord=[rayon * math.cos(teta), 0, rayon * math.sin(teta)], rot=[0, 0, 0], obj=dic_obj["pyramid"],
-                                   texture=dic_text["pyramid"], viewer=viewer, name="pyramid",vao_obj = dic_vao["pyramid"])
+        pyramide = Pyramid.Pyramid(vie=1, coord=[rayon * math.cos(teta), 0, rayon * math.sin(teta)], rot=[0, 0, 0], obj=dic_obj["pyramid"],texture=dic_text["pyramid"], viewer=viewer, name="pyramid",vao_obj = dic_vao["pyramid"])
         lst_pyramide.append(pyramide)
+        pyramide.size = 0.25
         pyramide.create()
         #pyramide.create_BB()
 
@@ -114,7 +114,11 @@ def main():
     texture = glutils.load_texture('Textures/fontB2.png')
     text_pause = Text('Pause', np.array([-0.8, 0.3], np.float32), np.array([0.8, 0.8], np.float32), vao_obj, 2, viewer.programGUI_id, texture)
     viewer.text_pause = text_pause
-    viewer.add_object(text_pause)
+    # Text vie du joueur
+    vao_obj = Text.initalize_geometry()
+    texture = glutils.load_texture('Textures/fontB2.png')
+    text_life = Text(f'Vie: {humain.life}', np.array([-0.95, -0.95], np.float32), np.array([-0.65, -0.85], np.float32), vao_obj, 2, viewer.programGUI_id, texture)
+    viewer.text_life = text_life
 
     viewer.run()
 

@@ -12,9 +12,28 @@ class Pyramid(Entity):
         mov = [i*0.005 for i in vect_norm]
         self.object.transformation.translation.x += mov[0]
         self.object.transformation.translation.z += mov[2]
+        self.move_BB()
     
     def create_BB(self):
         self.bounding_box = BoundingBox(self)
 
-    def move_BB(self):
-        self.bounding_box.object.transformation.translation = self.object.transformation.translation
+    # def move_BB(self):
+    #     self.bounding_box.object.transformation.translation = self.object.transformation.translation
+
+    def destroy(self):
+        self.viewer.objs_bounding_boxes.remove(self.bounding_box)
+        self.viewer.objs_pyramide.remove(self)
+        self.viewer.objs.remove(self)
+
+    def collision(self):
+        if self.bounding_box.intersectB(self.viewer.objs_humain.bounding_box):
+            print("col")
+            self.viewer.objs_humain.life -= 1
+            self.viewer.text_life.value= f'Vie: {self.viewer.objs_humain.life}'
+            self.destroy()
+        for proj in self.viewer.objs_projectile:
+            if self.bounding_box.intersectB(proj.bounding_box):
+                print(" col proj")
+                print("truc")
+                self.destroy()
+                proj.destroy()
