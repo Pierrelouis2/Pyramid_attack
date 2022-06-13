@@ -4,8 +4,6 @@ import math
 import glfw
 
 class Pyramid(Entity):
-    # def __init__(self, vao, nb_triangle, program, texture):
-    #    super().__init__(vao, nb_triangle, program, texture)
     def mouvement(self,humain) :
         vect =[humain.object.transformation.translation.x - self.object.transformation.translation.x,0,humain.object.transformation.translation.z  - self.object.transformation.translation.z]
         norm = math.sqrt(vect[0]*vect[0] + vect[2]*vect[2])

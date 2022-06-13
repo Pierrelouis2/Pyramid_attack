@@ -52,10 +52,10 @@ def main():
     dic_obj["cube_humain"].apply_matrix(pyrr.matrix44.create_from_scale([0.2, 0.5, 0.2, 1]))
     dic_obj["cube_arrow"] = Mesh.load_obj("Textures/cube.obj")
     dic_obj["cube_arrow"].normalize()
-    dic_obj["cube_arrow"].apply_matrix(pyrr.matrix44.create_from_scale([0.2, 0.2, 0.15, 1]))
+    dic_obj["cube_arrow"].apply_matrix(pyrr.matrix44.create_from_scale([0.15, 0.15, 0.25, 1]))
     dic_obj["line"] = Mesh.load_obj("Textures/cube.obj")
     dic_obj["line"].normalize()
-    dic_obj["line"].apply_matrix(pyrr.matrix44.create_from_scale([0.001, 0.001, 20, 1]))
+    dic_obj["line"].apply_matrix(pyrr.matrix44.create_from_scale([0.006, 0.006, 20, 1]))
 
     dic_obj["arrow"] = Mesh.load_obj("Textures/arrow.obj")
     dic_obj["arrow"].normalize()

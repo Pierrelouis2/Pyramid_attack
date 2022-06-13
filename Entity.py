@@ -56,6 +56,8 @@ class Entity():
 
     def move_BB(self):
         self.bounding_box.object.transformation.translation = self.object.transformation.translation
+        self.bounding_box.object.transformation.rotation_euler[pyrr.euler.index().yaw] = self.object.transformation.rotation_euler[pyrr.euler.index().yaw]
+        self.bounding_box.object.transformation.rotation_euler[pyrr.euler.index().roll] = self.object.transformation.rotation_euler[pyrr.euler.index().roll]
         self.bounding_box.p_min.x = self.bounding_box.object.transformation.translation.x - self.size.x
         self.bounding_box.p_max.x = self.bounding_box.object.transformation.translation.x + self.size.x
         self.bounding_box.p_min.y = self.bounding_box.object.transformation.translation.y - self.size.y
