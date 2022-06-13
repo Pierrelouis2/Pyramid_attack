@@ -58,12 +58,13 @@ class Entity():
         self.bounding_box.object.transformation.translation = self.object.transformation.translation
         self.bounding_box.object.transformation.rotation_euler[pyrr.euler.index().roll]= self.object.transformation.rotation_euler[pyrr.euler.index().roll]
         self.bounding_box.object.transformation.rotation_euler[pyrr.euler.index().yaw]= self.object.transformation.rotation_euler[pyrr.euler.index().yaw]
-        self.xmin = self.bounding_box.object.transformation.translation.x - self.size.x
-        self.xmax = self.bounding_box.object.transformation.translation.x + self.size.x
-        self.ymin = self.bounding_box.object.transformation.translation.y - self.size.y
-        self.ymax = self.bounding_box.object.transformation.translation.y + self.size.y
-        self.zmin = self.bounding_box.object.transformation.translation.z - self.size.z
-        self.zmax = self.bounding_box.object.transformation.translation.z + self.size.z
+        self.xmin = self.bounding_box.object.transformation.translation.x - self.size.x/2
+        self.xmax = self.bounding_box.object.transformation.translation.x + self.size.x/2
+        self.ymin = self.bounding_box.object.transformation.translation.y - self.size.y/2
+        self.ymax = self.bounding_box.object.transformation.translation.y + self.size.y/2
+        self.zmin = self.bounding_box.object.transformation.translation.z - self.size.z/2
+        self.zmax = self.bounding_box.object.transformation.translation.z + self.size.z/2
+        #print(self.name,self.xmin,self.xmax, self.ymin,self.ymax, self.zmin, self.zmax)
 
 
 class BoundingBox:
@@ -99,6 +100,6 @@ class BoundingBox:
         return pyrr.vector3.length(self.position - bounding_box.position)< 0.50
 
     def intersectBB(self, b):
-        return ((self.xmin <= b.xmax and self.xmax >= b.xmin) and (self.ymin <= b.ymax and self.ymax >= b.ymin) and (self.zmin <= b.zmax and self.zmax >= b.zmin))
+        return ((self.xmin <= b.xmax) and (self.xmax >= b.xmin) and (self.ymin <= b.ymax) and (self.ymax >= b.ymin) and (self.zmin <= b.zmax) and (self.zmax >= b.zmin))
 
 
