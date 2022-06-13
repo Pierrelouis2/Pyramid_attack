@@ -87,9 +87,10 @@ def main():
     humain = Humain.Humain(vie=10, coord=[0,0, 0], rot=[0, 0, 0], obj=dic_obj["humain"],texture=dic_text["humain"], viewer=viewer, name="humain",vao_obj=dic_vao["humain"])
     humain.create()
     humain.size = pyrr.Vector3([0.2, 0.5, 0.2])
+    humain.v_proj = 0.2
     humain.object.transformation.rotation_euler[pyrr.euler.index().yaw] = math.pi # il faut mettre l'humain a l'endroit
     # Spawn Pyramide
-    nbr_pyramide = 10
+    nbr_pyramide = 100
     lst_pyramide = []
     rayon = 10
     for i in range(nbr_pyramide):
@@ -116,6 +117,14 @@ def main():
     texture = glutils.load_texture('Textures/fontB2.png')
     text_life = Text(f'Vie: {humain.life}', np.array([-0.95, -0.95], np.float32), np.array([-0.65, -0.85], np.float32), vao_obj, 2, viewer.programGUI_id, texture)
     viewer.text_life = text_life
+    # Text charactéristique joueur
+    vao_obj = Text.initalize_geometry()
+    texture = glutils.load_texture('Textures/fontB2.png')
+    V_init = humain.jumping_force/humain.weight * viewer.dt
+    h= int(((0.5 * V_init**2)/viewer.gravity) *10) /10
+    text_character = Text(f"V: {int(humain.delta_posZ * 100)/100 * 60}m/s, Vcoté: {int(humain.delta_posX* 100)/100*60}m/s, Fire rate:{int(1/humain.timer_shoot* 10)/10}/s a {int(humain.v_proj*10)/10*60}m/s , saut: {h}m",
+        np.array([-0.95, 0.85], np.float32), np.array([0.95, 0.95], np.float32), vao_obj, 2, viewer.programGUI_id, texture)
+    viewer.text_character = text_character
 
     viewer.run()
 

@@ -72,7 +72,7 @@ class ViewerGL:
                         self.update_camera(obj.object.program)
                     obj.object.draw()
                 self.text_life.draw()
-                self.objs_humain.move_BB()
+                self.objs_humain.bounding_box.move_BB()
                 
                 # mouvement des prohectiles
                 for proj in self.objs_projectile :
@@ -92,6 +92,7 @@ class ViewerGL:
                 self.objs_humain.update_line()
                 self.create_bonus()
                 self.objs_humain.collision()
+                self.text_character.draw()
 
 
             else:
@@ -225,6 +226,7 @@ class ViewerGL:
             cube_bonus = Entity.Entity(vie=1, coord=[x,y,z], rot=[0, 0, 0], obj=self.dic_obj["cube_bonus"],texture=self.dic_text["humain"], viewer=self, name="bonus",vao_obj = self.dic_vao["cube_bonus"])
             cube_bonus.create()
             cube_bonus.size = pyrr.Vector3([0.25, 0.25, 0.25])
+            cube_bonus.bounding_box.move_BB()
             self.objs_bonus.append(cube_bonus)
             self.time_last_bonus = time.time()
 

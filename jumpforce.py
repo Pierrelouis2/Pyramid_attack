@@ -8,7 +8,7 @@ jump_force = 1000  # precision (en kg.m.s-2)
 jump_force_offset = 0
 
 dt = 0.017  # (en s) soit 6fps (calcul trop long pour 60fps)
-masse = 75  # (en Kg)
+masse = 60  # (en Kg)
 gravity_obj = -9.81  # (en m.s-2)
 acceleration = 0  # (en Kg.m-2)
 vitesse = 0.0  # (en m.s-1)
@@ -51,9 +51,9 @@ if case == "temps":
         position += vitesse * dt
         acceleration = gravity_obj
         vitesse += acceleration * dt
+        positions.append(position)
         if position < 0:
             break
-        positions.append(position)
     plt.plot([i*dt for i in range(len(positions))], positions)
     plt.xlabel("temps (en s)")
     plt.ylabel("hauteur max du saut (en m)")

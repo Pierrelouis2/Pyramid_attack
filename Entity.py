@@ -53,18 +53,7 @@ class Entity():
 
         if self.name != "sol" and self.name != "line":
             self.bounding_box = BoundingBox(self)
-
-    def move_BB(self):
-        self.bounding_box.object.transformation.translation = self.object.transformation.translation
-        self.bounding_box.object.transformation.rotation_euler[pyrr.euler.index().yaw] = self.object.transformation.rotation_euler[pyrr.euler.index().yaw]
-        self.bounding_box.object.transformation.rotation_euler[pyrr.euler.index().roll] = self.object.transformation.rotation_euler[pyrr.euler.index().roll]
-        self.bounding_box.p_min.x = self.bounding_box.object.transformation.translation.x - self.size.x
-        self.bounding_box.p_max.x = self.bounding_box.object.transformation.translation.x + self.size.x
-        self.bounding_box.p_min.y = self.bounding_box.object.transformation.translation.y - self.size.y
-        self.bounding_box.p_max.y = self.bounding_box.object.transformation.translation.y + self.size.y
-        self.bounding_box.p_min.z = self.bounding_box.object.transformation.translation.z - self.size.z
-        self.bounding_box.p_max.z = self.bounding_box.object.transformation.translation.z + self.size.z
-        #print(self.name,self.xmin,self.xmax, self.ymin,self.ymax, self.zmin, self.zmax)
+            #self.bounding_box.move_BB()
 
 
 class BoundingBox:
@@ -95,3 +84,14 @@ class BoundingBox:
     def intersectBB(self, b):
         return (self.p_max.x >= b.p_min.x and self.p_min.x <= b.p_max.x and self.p_max.y >= b.p_min.y and self.p_min.y <= b.p_max.y and self.p_max.z >= b.p_min.z and self.p_min.z <= b.p_max.z)
 
+    def move_BB(self):
+        self.object.transformation.translation = self.entity.object.transformation.translation
+        self.object.transformation.rotation_euler[pyrr.euler.index().yaw] = self.entity.object.transformation.rotation_euler[pyrr.euler.index().yaw]
+        self.object.transformation.rotation_euler[pyrr.euler.index().roll] = self.entity.object.transformation.rotation_euler[pyrr.euler.index().roll]
+        self.p_min.x = self.object.transformation.translation.x - self.entity.size.x
+        self.p_max.x = self.object.transformation.translation.x + self.entity.size.x
+        self.p_min.y = self.object.transformation.translation.y - self.entity.size.y
+        self.p_max.y = self.object.transformation.translation.y + self.entity.size.y
+        self.p_min.z = self.object.transformation.translation.z - self.entity.size.z
+        self.p_max.z = self.object.transformation.translation.z + self.entity.size.z
+        #print(self.name,self.xmin,self.xmax, self.ymin,self.ymax, self.zmin, self.zmax)
