@@ -56,6 +56,9 @@ def main():
     dic_obj["line"] = Mesh.load_obj("Textures/cube.obj")
     dic_obj["line"].normalize()
     dic_obj["line"].apply_matrix(pyrr.matrix44.create_from_scale([0.006, 0.006, 20, 1]))
+    dic_obj["cube_bonus"] = Mesh.load_obj("Textures/cube.obj")
+    dic_obj["cube_bonus"].normalize()
+    dic_obj["cube_bonus"].apply_matrix(pyrr.matrix44.create_from_scale([0.25, 0.25, 0.25, 1]))
 
     dic_obj["arrow"] = Mesh.load_obj("Textures/arrow.obj")
     dic_obj["arrow"].normalize()
@@ -102,7 +105,7 @@ def main():
     line = Entity(vie = 1, coord=[0,0,0], rot=[0,0,math.pi/2], obj=dic_obj["line"],texture=dic_text["line"],viewer=viewer, vao_obj = dic_vao["line"],name="line")
     line.create()
     line.object.transformation.rotation_euler[pyrr.euler.index().roll] = math.pi/2
-    viewer.line = line
+    humain.line = line
     # Text Pause
     vao_obj = Text.initalize_geometry()
     texture = glutils.load_texture('Textures/fontB2.png')
