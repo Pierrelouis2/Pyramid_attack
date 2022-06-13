@@ -56,14 +56,12 @@ class Entity():
 
     def move_BB(self):
         self.bounding_box.object.transformation.translation = self.object.transformation.translation
-        self.bounding_box.object.transformation.rotation_euler[pyrr.euler.index().roll]= self.object.transformation.rotation_euler[pyrr.euler.index().roll]
-        self.bounding_box.object.transformation.rotation_euler[pyrr.euler.index().yaw]= self.object.transformation.rotation_euler[pyrr.euler.index().yaw]
-        self.xmin = self.bounding_box.object.transformation.translation.x - self.size.x/2
-        self.xmax = self.bounding_box.object.transformation.translation.x + self.size.x/2
-        self.ymin = self.bounding_box.object.transformation.translation.y - self.size.y/2
-        self.ymax = self.bounding_box.object.transformation.translation.y + self.size.y/2
-        self.zmin = self.bounding_box.object.transformation.translation.z - self.size.z/2
-        self.zmax = self.bounding_box.object.transformation.translation.z + self.size.z/2
+        self.bounding_box.p_min.x = self.bounding_box.object.transformation.translation.x - self.size.x
+        self.bounding_box.p_max.x = self.bounding_box.object.transformation.translation.x + self.size.x
+        self.bounding_box.p_min.y = self.bounding_box.object.transformation.translation.y - self.size.y
+        self.bounding_box.p_max.y = self.bounding_box.object.transformation.translation.y + self.size.y
+        self.bounding_box.p_min.z = self.bounding_box.object.transformation.translation.z - self.size.z
+        self.bounding_box.p_max.z = self.bounding_box.object.transformation.translation.z + self.size.z
         #print(self.name,self.xmin,self.xmax, self.ymin,self.ymax, self.zmin, self.zmax)
 
 
@@ -77,12 +75,8 @@ class BoundingBox:
         self.coord = entity.coord
         self.obj = entity.viewer.dic_obj[f"cube_{entity.name}"]
         self.texture = entity.viewer.dic_text["cube"]
-        self.xmin = 0
-        self.xmax = 0
-        self.ymin = 0
-        self.ymax = 0
-        self.zmin = 0
-        self.zmax = 0
+        self.p_max = pyrr.Vector3()
+        self.p_min = pyrr.Vector3()
         self.create()
 
     def create(self):
@@ -96,10 +90,6 @@ class BoundingBox:
         self.object = Object3D(self.entity.viewer.dic_vao[f"cube_{self.entity.name}"], self.obj.get_nb_triangles(),self.viewer.program3d_id, self.texture, tr)
         self.viewer.add_bounding_box(self)
 
-    def intersectB(self,bounding_box):
-        return pyrr.vector3.length(self.position - bounding_box.position)< 0.50
-
     def intersectBB(self, b):
-        return ((self.xmin <= b.xmax) and (self.xmax >= b.xmin) and (self.ymin <= b.ymax) and (self.ymax >= b.ymin) and (self.zmin <= b.zmax) and (self.zmax >= b.zmin))
-
+        return (self.p_max.x >= b.p_min.x and self.p_min.x <= b.p_max.x and self.p_max.y >= b.p_min.y and self.p_min.y <= b.p_max.y and self.p_max.z >= b.p_min.z and self.p_min.z <= b.p_max.z)
 

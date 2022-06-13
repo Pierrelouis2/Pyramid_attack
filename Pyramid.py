@@ -1,6 +1,7 @@
 
 from Entity import Entity, BoundingBox
 import math
+import glfw
 
 class Pyramid(Entity):
     # def __init__(self, vao, nb_triangle, program, texture):
@@ -23,7 +24,7 @@ class Pyramid(Entity):
         self.viewer.objs.remove(self)
 
     def collision(self):
-        if self.bounding_box.intersectB(self.viewer.objs_humain.bounding_box):
+        if self.bounding_box.intersectBB(self.viewer.objs_humain.bounding_box):
             self.viewer.objs_humain.life -= 1
             self.viewer.text_life.value= f'Vie: {self.viewer.objs_humain.life}'
             self.destroy()
