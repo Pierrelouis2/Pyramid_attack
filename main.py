@@ -90,7 +90,7 @@ def main():
     humain.v_proj = 0.2
     humain.object.transformation.rotation_euler[pyrr.euler.index().yaw] = math.pi # il faut mettre l'humain a l'endroit
     # Spawn Pyramide
-    nbr_pyramide = 100
+    nbr_pyramide = 10
     lst_pyramide = []
     rayon = 10
     for i in range(nbr_pyramide):
