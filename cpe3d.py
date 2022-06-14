@@ -91,9 +91,9 @@ class Camera:
                     self.viewer.cam.transformation.rotation_euler[pyrr.euler.index().roll] = 1.31
                 self.update()
                 if self.mouse_dX >0:
-                    self.viewer.objs[0].transformation.rotation_euler[pyrr.euler.index().yaw] += self.mouse_dX/100
+                    self.viewer.objs_humain.object.transformation.rotation_euler[pyrr.euler.index().yaw] += self.mouse_dX/100
                 elif self.mouse_dX<0:
-                    self.viewer.objs[0].transformation.rotation_euler[pyrr.euler.index().yaw] += self.mouse_dX/100
+                    self.viewer.objs_humain.object.transformation.rotation_euler[pyrr.euler.index().yaw] += self.mouse_dX/100
                 glfw.set_cursor_pos(self.viewer.window,400,400)
         elif self.first_mouse == True:
             self.first_mouse = False
