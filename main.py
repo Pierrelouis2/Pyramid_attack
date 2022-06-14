@@ -112,6 +112,7 @@ def main():
     texture = glutils.load_texture('Textures/fontB2.png')
     text_pause = Text('Pause', np.array([-0.8, 0.3], np.float32), np.array([0.8, 0.8], np.float32), vao_obj, 2, viewer.programGUI_id, texture)
     viewer.text_pause = text_pause
+    #viewer.add_object(text_pause)
     # Text vie du joueur
     vao_obj = Text.initalize_geometry()
     texture = glutils.load_texture('Textures/fontB2.png')
