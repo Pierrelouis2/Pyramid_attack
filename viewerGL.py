@@ -89,7 +89,7 @@ class ViewerGL:
 
                 self.update_key()
                 self.gravitation()
-                self.objs_humain.update_line()
+                self.update_line()
                 self.create_bonus()
                 self.objs_humain.collision()
                 self.text_character.draw()
@@ -193,7 +193,8 @@ class ViewerGL:
         if self.lock_cam:
             self.cam.transformation.rotation_center = self.objs_humain.object.transformation.translation + self.objs_humain.object.transformation.rotation_center
             # on peut choisir l'offset lorsque l'on suit l'objet
-            self.cam.transformation.translation = self.objs_humain.object.transformation.translation + pyrr.Vector3([0, 0.75, 2.556])
+            # 2.556
+            self.cam.transformation.translation = self.objs_humain.object.transformation.translation + pyrr.Vector3([0, 0.75, 5])
         # Shoot
         if glfw.KEY_X in self.touch and self.touch[glfw.KEY_X]> 0 :
             self.objs_humain.shoot()
@@ -235,11 +236,14 @@ class ViewerGL:
                             texture=self.dic_text["arrow"], viewer=self, name="arrow",vao_obj=self.dic_vao["arrow"])
         proj.create()
         proj.object.transformation.translation.y += self.objs_humain.object.transformation.translation.y +0.1
-        proj.object.transformation.rotation_euler[pyrr.euler.index().yaw] = self.objs_humain.object.transformation.rotation_euler[pyrr.euler.index().yaw] + math.pi/2
-        proj.object.transformation.rotation_euler[pyrr.euler.index().roll] = self.cam.transformation.rotation_euler[pyrr.euler.index().roll]
+        proj.object.transformation.rotation_euler[pyrr.euler.index().yaw] = self.objs_humain.line.object.transformation.rotation_euler[pyrr.euler.index().yaw]  
+        proj.object.transformation.rotation_euler[pyrr.euler.index().roll] = self.objs_humain.line.object.transformation.rotation_euler[pyrr.euler.index().roll]
+        proj.object.transformation.rotation_euler[pyrr.euler.index().pitch] = self.objs_humain.line.object.transformation.rotation_euler[pyrr.euler.index().pitch]
         self.objs_projectile.append(proj)
 
     def update_line(self):
-        self.line.object.transformation.translation = self.objs_humain.object.transformation.translation + 0.1
-        self.line.object.transformation.rotation_euler[pyrr.euler.index().yaw] = self.objs_humain.object.transformation.rotation_euler[pyrr.euler.index().yaw]
-        self.line.object.transformation.rotation_euler[pyrr.euler.index().roll] = self.cam.transformation.rotation_euler[pyrr.euler.index().roll]
+        self.objs_humain.line.object.transformation.translation = self.objs_humain.object.transformation.translation #+ pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(self.objs_humain.line.object.transformation.rotation_euler), pyrr.Vector3([0.1, 0.1, 0.1]))
+        yaw = self.cam.transformation.rotation_euler[pyrr.euler.index().yaw]
+        self.objs_humain.line.object.transformation.rotation_euler[pyrr.euler.index().yaw] = yaw#self.objs_humain.object.transformation.rotation_euler[pyrr.euler.index().yaw]
+        self.objs_humain.line.object.transformation.rotation_euler[pyrr.euler.index().roll] = math.cos(-yaw)*self.cam.transformation.rotation_euler[pyrr.euler.index().roll]
+        self.objs_humain.line.object.transformation.rotation_euler[pyrr.euler.index().pitch] = math.sin(yaw)*self.cam.transformation.rotation_euler[pyrr.euler.index().roll]

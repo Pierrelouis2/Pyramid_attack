@@ -24,9 +24,14 @@ class Pyramid(Entity):
 
     def collision(self):
         if self.bounding_box.intersectBB(self.viewer.objs_humain.bounding_box):
-            self.viewer.objs_humain.life -= 1
-            self.viewer.text_life.value = f'Vie: {self.viewer.objs_humain.life}'
-            self.destroy()
+            if self.viewer.objs_humain.life != 0:
+                self.viewer.objs_humain.life -= 1
+                self.viewer.text_life.value = f'Vie: {self.viewer.objs_humain.life}'
+                self.destroy()
+            else:
+                self.viewer.text_life.value = f'Vie: {self.viewer.objs_humain.life}'
+                self.destroy()
+                # glfw.set_window_should_close(, glfw.TRUE)
         for proj in self.viewer.objs_projectile:
             if self.bounding_box.intersectBB(proj.bounding_box):
                 self.destroy()
