@@ -37,15 +37,17 @@ class ViewerGL:
         self.lock_cam = True
         self.pause = False
         self.bool_draw_bounding_boxes = False
+        self.bool_caract = False
 
         self.timer_BB = 0.4
         self.time_last_BB = 0
         self.timer_bonus = 5
         self.time_last_bonus = 0
+        self.timer_caract = 0.2
+        self.time_last_caract = 0
 
         #gestion des vagues d'enemies
         self.nbr_pyramide = 10
-
 
         # pour faire un saut de 1 metre: (voir jumpforce.py)
         self.bool_jumping = False
@@ -91,8 +93,10 @@ class ViewerGL:
                 self.update_line()
                 self.create_bonus()
                 self.objs_humain.collision()
-                self.text_character.draw()
+                if self.bool_caract:
+                    self.text_character.draw()
                 self.text_life.draw()
+                self.text_score.draw()
 
             else:
                 GL.glClearColor(0.2, 0.2, 0.2, 0.5)
@@ -197,7 +201,10 @@ class ViewerGL:
         # Shoot
         if glfw.KEY_X in self.touch and self.touch[glfw.KEY_X]> 0 :
             self.objs_humain.shoot()
-
+        if glfw.KEY_TAB in self.touch and self.touch[glfw.KEY_TAB]> 0 :
+            if self.time_last_caract + self.timer_caract <= time.time():
+                self.bool_caract = not self.bool_caract
+                self.time_last_BB = time.time()
         state = glfw.get_mouse_button(self.window, glfw.MOUSE_BUTTON_LEFT)
         if (state == glfw.PRESS) :
             self.objs_humain.shoot()
