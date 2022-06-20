@@ -1,12 +1,11 @@
 import OpenGL.GL as GL
 import pyrr
-import numpy as np
-import cpe3d as cpe
-from Entity import *
-import arrow
-import math
+from Entity import Entity
+import Arrow
+import glfw
 import time
 import random as rand
+import math
 
 
 class Humain(Entity):
@@ -20,28 +19,22 @@ class Humain(Entity):
         self.weight = 75
 
 
-    def test(self):
-        pass
-
     def destroy(self):
-        #self.viewer.objs.remove(self)
         glfw.set_window_should_close(self.viewer.window, glfw.TRUE)
 
     def shoot(self) :
         if self.time_last_shoot + self.timer_shoot <= time.time() :
-            proj = arrow.Arrow(vie=1, coord=self.object.transformation.translation, rot=[0,0,0], obj=self.viewer.dic_obj["arrow"],texture=self.viewer.dic_text["arrow"], viewer=self.viewer, name="arrow",vao_obj=self.viewer.dic_vao["arrow"])
+            proj = Arrow.Arrow(vie=1, coord=self.object.transformation.translation, rot=[0,0,0], obj=self.viewer.dic_obj["arrow"],texture=self.viewer.dic_text["arrow"], viewer=self.viewer, name="arrow",vao_obj=self.viewer.dic_vao["arrow"])
             proj.create()
             proj.size = pyrr.Vector3([0.15, 0.15, 0.25])
-            proj.object.transformation.translation.y += self.object.transformation.translation.y +0.1
-            proj.object.transformation.rotation_euler[pyrr.euler.index().yaw] = self.object.transformation.rotation_euler[pyrr.euler.index().yaw]
-            proj.object.transformation.rotation_euler[pyrr.euler.index().roll] = -self.viewer.cam.transformation.rotation_euler[pyrr.euler.index().roll]
+            proj.object.transformation.translation.y += self.object.transformation.translation.y + 0.1
+            yaw = self.viewer.cam.transformation.rotation_euler[pyrr.euler.index().yaw]
+            proj.object.transformation.rotation_euler[pyrr.euler.index().yaw] = yaw
+            proj.object.transformation.rotation_euler[pyrr.euler.index().roll] = math.cos(-yaw) * self.viewer.cam.transformation.rotation_euler[pyrr.euler.index().roll]
+            proj.object.transformation.rotation_euler[pyrr.euler.index().pitch] = math.sin(yaw) * self.viewer.cam.transformation.rotation_euler[pyrr.euler.index().roll]
             self.viewer.objs_projectile.append(proj)
             self.time_last_shoot = time.time()
-
-    def update_line(self):
-        self.line.object.transformation.translation = self.object.transformation.translation + 0.1
-        self.line.object.transformation.rotation_euler[pyrr.euler.index().yaw] = self.object.transformation.rotation_euler[pyrr.euler.index().yaw]
-        self.line.object.transformation.rotation_euler[pyrr.euler.index().roll] = -self.viewer.cam.transformation.rotation_euler[pyrr.euler.index().roll]
+        
 
     def collision(self):
         for bonus in self.viewer.objs_bonus:

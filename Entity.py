@@ -1,11 +1,8 @@
 
-import glutils
-from mesh import Mesh
-from cpe3d import Object3D, Camera, Transformation3D, Text
+from cpe3d import Object3D, Transformation3D
 import numpy as np
 import OpenGL.GL as GL
 import pyrr
-import glfw
 
 class Entity():
     """
@@ -53,7 +50,6 @@ class Entity():
 
         if self.name != "sol" and self.name != "line":
             self.bounding_box = BoundingBox(self)
-            #self.bounding_box.move_BB()
 
 
 class BoundingBox:
@@ -94,4 +90,3 @@ class BoundingBox:
         self.p_max.y = self.object.transformation.translation.y + self.entity.size.y
         self.p_min.z = self.object.transformation.translation.z - self.entity.size.z
         self.p_max.z = self.object.transformation.translation.z + self.entity.size.z
-        #print(self.name,self.xmin,self.xmax, self.ymin,self.ymax, self.zmin, self.zmax)

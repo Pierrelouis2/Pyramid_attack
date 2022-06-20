@@ -1,15 +1,11 @@
 from viewerGL import ViewerGL
 import glutils
 from mesh import Mesh
-from cpe3d import Object3D, Camera, Transformation3D, Text
+from cpe3d import Camera, Text
 import numpy as np
-import OpenGL.GL as GL
-import random as rand
-import Pyramid
-from Entity import Entity, BoundingBox
+from Entity import Entity
 import Humain
 import math
-import glfw
 import pyrr
 
 def main():
@@ -43,6 +39,7 @@ def main():
     dic_obj["humain"] = Mesh.load_obj("Textures/homme.obj")
     dic_obj["humain"].normalize()
     dic_obj["humain"].apply_matrix(pyrr.matrix44.create_from_scale([0.5, 0.5, 0.5, 1]))
+   
     #bounding_box
     dic_obj["cube_pyramid"] = Mesh.load_obj("Textures/cube.obj")
     dic_obj["cube_pyramid"].normalize()
@@ -55,8 +52,8 @@ def main():
     dic_obj["cube_arrow"].apply_matrix(pyrr.matrix44.create_from_scale([0.15, 0.15, 0.25, 1]))
     dic_obj["line"] = Mesh.load_obj("Textures/cube.obj")
     dic_obj["line"].normalize()
-    # dic_obj["line"].apply_matrix(pyrr.matrix44.create_from_scale([0.006, 0.006, 20, 1]))
-    dic_obj["line"].apply_matrix(pyrr.matrix44.create_from_scale([0.2, 0.2, 20, 1]))
+    dic_obj["line"].apply_matrix(pyrr.matrix44.create_from_scale([0.006, 0.006, 20, 1]))
+    #dic_obj["line"].apply_matrix(pyrr.matrix44.create_from_scale([0.6, 0.6, 20, 1]))
     dic_obj["cube_bonus"] = Mesh.load_obj("Textures/cube.obj")
     dic_obj["cube_bonus"].normalize()
     dic_obj["cube_bonus"].apply_matrix(pyrr.matrix44.create_from_scale([0.25, 0.25, 0.25, 1]))
@@ -65,9 +62,8 @@ def main():
     dic_obj["arrow"].normalize()
     dic_obj["arrow"].apply_matrix(pyrr.matrix44.create_from_scale([1, 1, 0.15, 1]))
 
-
-    viewer.dic_obj = dic_obj
-    viewer.dic_text = dic_text
+    for i in dic_obj :
+        dic_vao[i] = dic_obj[i].load_to_gpu()
 
     #chargement sol
     m = Mesh()
@@ -78,10 +74,10 @@ def main():
     m.faces = np.array([[0, 1, 2], [0, 2, 3]], np.uint32)
     dic_obj["sol"] = m
 
-    for i in dic_obj :
-        dic_vao[i] = dic_obj[i].load_to_gpu()
-
+    viewer.dic_obj = dic_obj
+    viewer.dic_text = dic_text
     viewer.dic_vao = dic_vao
+    
     #------------------------Fin Chargements des textures + objs ---------------------------
 
     # humain
@@ -90,35 +86,29 @@ def main():
     humain.size = pyrr.Vector3([0.2, 0.5, 0.2])
     humain.v_proj = 0.2
     humain.object.transformation.rotation_euler[pyrr.euler.index().yaw] = math.pi # il faut mettre l'humain a l'endroit
-    # Spawn Pyramide
-    nbr_pyramide = 100
-    lst_pyramide = []
-    rayon = 10
-    for i in range(nbr_pyramide):
-        teta = rand.randint(0, 10)
-        pyramide = Pyramid.Pyramid(vie=1, coord=[rayon * math.cos(teta), 0, rayon * math.sin(teta)], rot=[0, 0, 0], obj=dic_obj["pyramid"],texture=dic_text["pyramid"], viewer=viewer, name="pyramid",vao_obj = dic_vao["pyramid"])
-        lst_pyramide.append(pyramide)
-        pyramide.create()
-        pyramide.size = pyrr.Vector3([0.25, 0.25, 0.25])
+    
     # Sol
     sol  = Entity(vie=1, coord=[0,0,0], rot=[0,math.pi/2,math.pi/2], obj=dic_obj["sol"],texture=dic_text["sol"],viewer=viewer,vao_obj = dic_vao["sol"],name="sol")
     sol.create()
+   
     #Test "line"
     line = Entity(vie = 1, coord=[0,0,0], rot=[0,0,math.pi/2], obj=dic_obj["line"],texture=dic_text["line"],viewer=viewer, vao_obj = dic_vao["line"],name="line")
     line.create()
     line.object.transformation.rotation_euler[pyrr.euler.index().roll] = math.pi/2
     humain.line = line
+    
     # Text Pause
     vao_obj = Text.initalize_geometry()
     texture = glutils.load_texture('Textures/fontB2.png')
     text_pause = Text('Pause', np.array([-0.8, 0.3], np.float32), np.array([0.8, 0.8], np.float32), vao_obj, 2, viewer.programGUI_id, texture)
     viewer.text_pause = text_pause
-    #viewer.add_object(text_pause)
+
     # Text vie du joueur
     vao_obj = Text.initalize_geometry()
     texture = glutils.load_texture('Textures/fontB2.png')
     text_life = Text(f'Vie: {humain.life}', np.array([-0.95, -0.95], np.float32), np.array([-0.65, -0.85], np.float32), vao_obj, 2, viewer.programGUI_id, texture)
     viewer.text_life = text_life
+   
     # Text charactéristique joueur
     vao_obj = Text.initalize_geometry()
     texture = glutils.load_texture('Textures/fontB2.png')

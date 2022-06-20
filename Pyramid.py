@@ -1,7 +1,6 @@
 
-from Entity import Entity, BoundingBox
+from Entity import Entity
 import math
-import glfw
 
 class Pyramid(Entity):
     def mouvement(self,humain) :
@@ -14,13 +13,12 @@ class Pyramid(Entity):
         self.object.transformation.translation.z += mov[2]
         self.bounding_box.move_BB()
     
-    def create_BB(self):
-        self.bounding_box = BoundingBox(self)
 
     def destroy(self):
         self.viewer.objs_bounding_boxes.remove(self.bounding_box)
         self.viewer.objs_pyramide.remove(self)
         self.viewer.objs.remove(self)
+        
 
     def collision(self):
         if self.bounding_box.intersectBB(self.viewer.objs_humain.bounding_box):
@@ -31,7 +29,6 @@ class Pyramid(Entity):
             else:
                 self.viewer.text_life.value = f'Vie: {self.viewer.objs_humain.life}'
                 self.destroy()
-                # glfw.set_window_should_close(, glfw.TRUE)
         for proj in self.viewer.objs_projectile:
             if self.bounding_box.intersectBB(proj.bounding_box):
                 self.destroy()

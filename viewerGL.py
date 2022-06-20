@@ -1,15 +1,9 @@
-#!/usr/bin/env python3
-
-from re import X
-from sre_constants import JUMP
 import OpenGL.GL as GL
-import OpenGL
 import glfw
 import pyrr
 import numpy as np
 from cpe3d import Object3D, Camera
 import Pyramid
-import arrow
 import math
 import time
 import Entity
@@ -49,6 +43,10 @@ class ViewerGL:
         self.timer_bonus = 5
         self.time_last_bonus = 0
 
+        #gestion des vagues d'enemies
+        self.nbr_pyramide = 0
+
+
         # pour faire un saut de 1 metre: (voir jumpforce.py)
         self.bool_jumping = False
         self.gravity = -9.81
@@ -71,7 +69,6 @@ class ViewerGL:
                     if isinstance(obj.object, Object3D):
                         self.update_camera(obj.object.program)
                     obj.object.draw()
-                self.text_life.draw()
                 self.objs_humain.bounding_box.move_BB()
                 
                 # mouvement des prohectiles
@@ -86,6 +83,8 @@ class ViewerGL:
                 if self.bool_draw_bounding_boxes:
                     for bb in self.objs_bounding_boxes:
                         bb.object.draw()
+                #gestion spawn pyramidE 
+                self.Spawn_pyramid()
 
                 self.update_key()
                 self.gravitation()
@@ -93,7 +92,7 @@ class ViewerGL:
                 self.create_bonus()
                 self.objs_humain.collision()
                 self.text_character.draw()
-
+                self.text_life.draw()
 
             else:
                 GL.glClearColor(0.2, 0.2, 0.2, 0.5)
@@ -231,19 +230,23 @@ class ViewerGL:
             self.objs_bonus.append(cube_bonus)
             self.time_last_bonus = time.time()
 
-    def shoot(self) :
-        proj = arrow.Arrow(vie=1, coord=self.objs_humain.object.transformation.translation, rot=[0,0,0], obj=self.dic_obj["arrow"],
-                            texture=self.dic_text["arrow"], viewer=self, name="arrow",vao_obj=self.dic_vao["arrow"])
-        proj.create()
-        proj.object.transformation.translation.y += self.objs_humain.object.transformation.translation.y +0.1
-        proj.object.transformation.rotation_euler[pyrr.euler.index().yaw] = self.objs_humain.line.object.transformation.rotation_euler[pyrr.euler.index().yaw]  
-        proj.object.transformation.rotation_euler[pyrr.euler.index().roll] = self.objs_humain.line.object.transformation.rotation_euler[pyrr.euler.index().roll]
-        proj.object.transformation.rotation_euler[pyrr.euler.index().pitch] = self.objs_humain.line.object.transformation.rotation_euler[pyrr.euler.index().pitch]
-        self.objs_projectile.append(proj)
 
     def update_line(self):
-        self.objs_humain.line.object.transformation.translation = self.objs_humain.object.transformation.translation #+ pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(self.objs_humain.line.object.transformation.rotation_euler), pyrr.Vector3([0.1, 0.1, 0.1]))
+        self.objs_humain.line.object.transformation.translation = self.objs_humain.object.transformation.translation + 0.1 
+        self.objs_humain.line.object.transformation.translation.x -= 0.1
+        self.objs_humain.line.object.transformation.translation.z -= 0.1
         yaw = self.cam.transformation.rotation_euler[pyrr.euler.index().yaw]
-        self.objs_humain.line.object.transformation.rotation_euler[pyrr.euler.index().yaw] = yaw#self.objs_humain.object.transformation.rotation_euler[pyrr.euler.index().yaw]
-        self.objs_humain.line.object.transformation.rotation_euler[pyrr.euler.index().roll] = math.cos(-yaw)*self.cam.transformation.rotation_euler[pyrr.euler.index().roll]
-        self.objs_humain.line.object.transformation.rotation_euler[pyrr.euler.index().pitch] = math.sin(yaw)*self.cam.transformation.rotation_euler[pyrr.euler.index().roll]
+        self.objs_humain.line.object.transformation.rotation_euler[pyrr.euler.index().yaw] = yaw
+        self.objs_humain.line.object.transformation.rotation_euler[pyrr.euler.index().roll] = math.cos(-yaw) * self.cam.transformation.rotation_euler[pyrr.euler.index().roll]
+        self.objs_humain.line.object.transformation.rotation_euler[pyrr.euler.index().pitch] = math.sin(yaw) * self.cam.transformation.rotation_euler[pyrr.euler.index().roll]
+
+    def Spawn_pyramid(self) :
+         # Spawn Pyramide
+        if self.objs_pyramide == [] :
+            nbr_pyramide = 10
+            rayon = 10
+            for i in range(nbr_pyramide):
+                teta = rand.randint(0, nbr_pyramide*10) #*10 pour evite que des pyramide spawn au meme endroit
+                pyramide = Pyramid.Pyramid(vie=1, coord=[rayon * math.cos(teta), 0, rayon * math.sin(teta)], rot=[0, 0, 0], obj=self.dic_obj["pyramid"],texture=self.dic_text["pyramid"], viewer=self, name="pyramid",vao_obj = self.dic_vao["pyramid"])
+                pyramide.create()
+                pyramide.size = pyrr.Vector3([0.25, 0.25, 0.25])
