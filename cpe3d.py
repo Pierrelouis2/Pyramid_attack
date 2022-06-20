@@ -102,7 +102,6 @@ class Camera:
     def update(self):
         self.viewer.cam.transformation.rotation_euler[pyrr.euler.index().roll] += self.mouse_dY/200
         self.viewer.cam.transformation.rotation_euler[pyrr.euler.index().yaw] += self.mouse_dX/100
-        print(self.viewer.cam.transformation.rotation_euler[pyrr.euler.index().roll])
         self.viewer.update_camera(self.viewer.program3d_id)
 
 
