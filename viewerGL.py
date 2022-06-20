@@ -1,15 +1,9 @@
-#!/usr/bin/env python3
-
-from re import X
-from sre_constants import JUMP
 import OpenGL.GL as GL
-import OpenGL
 import glfw
 import pyrr
 import numpy as np
 from cpe3d import Object3D, Camera
 import Pyramid
-import arrow
 import math
 import time
 import Entity

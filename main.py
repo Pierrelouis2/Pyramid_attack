@@ -53,7 +53,7 @@ def main():
     dic_obj["line"] = Mesh.load_obj("Textures/cube.obj")
     dic_obj["line"].normalize()
     dic_obj["line"].apply_matrix(pyrr.matrix44.create_from_scale([0.006, 0.006, 20, 1]))
-    #dic_obj["line"].apply_matrix(pyrr.matrix44.create_from_scale([0.2, 0.2, 20, 1]))
+    #dic_obj["line"].apply_matrix(pyrr.matrix44.create_from_scale([0.6, 0.6, 20, 1]))
     dic_obj["cube_bonus"] = Mesh.load_obj("Textures/cube.obj")
     dic_obj["cube_bonus"].normalize()
     dic_obj["cube_bonus"].apply_matrix(pyrr.matrix44.create_from_scale([0.25, 0.25, 0.25, 1]))
@@ -62,9 +62,8 @@ def main():
     dic_obj["arrow"].normalize()
     dic_obj["arrow"].apply_matrix(pyrr.matrix44.create_from_scale([1, 1, 0.15, 1]))
 
-
-    viewer.dic_obj = dic_obj
-    viewer.dic_text = dic_text
+    for i in dic_obj :
+        dic_vao[i] = dic_obj[i].load_to_gpu()
 
     #chargement sol
     m = Mesh()
@@ -75,10 +74,10 @@ def main():
     m.faces = np.array([[0, 1, 2], [0, 2, 3]], np.uint32)
     dic_obj["sol"] = m
 
-    for i in dic_obj :
-        dic_vao[i] = dic_obj[i].load_to_gpu()
-
+    viewer.dic_obj = dic_obj
+    viewer.dic_text = dic_text
     viewer.dic_vao = dic_vao
+    
     #------------------------Fin Chargements des textures + objs ---------------------------
 
     # humain

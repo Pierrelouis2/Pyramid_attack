@@ -1,7 +1,7 @@
 import OpenGL.GL as GL
 import pyrr
 from Entity import Entity
-import arrow
+import Arrow
 import glfw
 import time
 import random as rand
@@ -24,7 +24,7 @@ class Humain(Entity):
 
     def shoot(self) :
         if self.time_last_shoot + self.timer_shoot <= time.time() :
-            proj = arrow.Arrow(vie=1, coord=self.object.transformation.translation, rot=[0,0,0], obj=self.viewer.dic_obj["arrow"],texture=self.viewer.dic_text["arrow"], viewer=self.viewer, name="arrow",vao_obj=self.viewer.dic_vao["arrow"])
+            proj = Arrow.Arrow(vie=1, coord=self.object.transformation.translation, rot=[0,0,0], obj=self.viewer.dic_obj["arrow"],texture=self.viewer.dic_text["arrow"], viewer=self.viewer, name="arrow",vao_obj=self.viewer.dic_vao["arrow"])
             proj.create()
             proj.size = pyrr.Vector3([0.15, 0.15, 0.25])
             proj.object.transformation.translation.y += self.object.transformation.translation.y + 0.1
