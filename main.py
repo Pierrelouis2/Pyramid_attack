@@ -1,15 +1,11 @@
 from viewerGL import ViewerGL
 import glutils
 from mesh import Mesh
-from cpe3d import Object3D, Camera, Transformation3D, Text
+from cpe3d import Camera, Text
 import numpy as np
-import OpenGL.GL as GL
-import random as rand
-import Pyramid
-from Entity import Entity, BoundingBox
+from Entity import Entity
 import Humain
 import math
-import glfw
 import pyrr
 
 def main():
@@ -91,8 +87,6 @@ def main():
     humain.size = pyrr.Vector3([0.2, 0.5, 0.2])
     humain.v_proj = 0.2
     humain.object.transformation.rotation_euler[pyrr.euler.index().yaw] = math.pi # il faut mettre l'humain a l'endroit
-    
-    
     
     # Sol
     sol  = Entity(vie=1, coord=[0,0,0], rot=[0,math.pi/2,math.pi/2], obj=dic_obj["sol"],texture=dic_text["sol"],viewer=viewer,vao_obj = dic_vao["sol"],name="sol")

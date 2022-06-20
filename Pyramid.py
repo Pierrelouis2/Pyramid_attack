@@ -1,7 +1,6 @@
 
-from Entity import Entity, BoundingBox
+from Entity import Entity
 import math
-import glfw
 
 class Pyramid(Entity):
     def mouvement(self,humain) :
@@ -16,8 +15,7 @@ class Pyramid(Entity):
     
 
     def destroy(self):
-        print(self.bounding_box)
-        #self.viewer.objs_bounding_boxes.remove(self.bounding_box)
+        self.viewer.objs_bounding_boxes.remove(self.bounding_box)
         self.viewer.objs_pyramide.remove(self)
         self.viewer.objs.remove(self)
         
