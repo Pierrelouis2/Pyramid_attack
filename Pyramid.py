@@ -22,16 +22,17 @@ class Pyramid(Entity):
         
 
     def collision(self):
-        if self.bounding_box.intersectBB(self.viewer.objs_humain.bounding_box):
-            if self.viewer.objs_humain.life != 0:
-                self.viewer.objs_humain.score -= 10
-                self.viewer.text_score.value = f'score: {self.viewer.objs_humain.score}'
-                self.viewer.objs_humain.life -= 1
-                self.viewer.text_life.value = f'Vie: {int(self.viewer.objs_humain.life)}'
-                self.destroy()
-            else:
-                self.viewer.text_life.value = f'Vie: {int(self.viewer.objs_humain.life)}'
-                self.destroy()
+        if not self.viewer.cheat_allow :
+            if self.bounding_box.intersectBB(self.viewer.objs_humain.bounding_box):
+                if self.viewer.objs_humain.life != 0:
+                    self.viewer.objs_humain.score -= 10
+                    self.viewer.text_score.value = f'score: {self.viewer.objs_humain.score}'
+                    self.viewer.objs_humain.life -= 1
+                    self.viewer.text_life.value = f'Vie: {int(self.viewer.objs_humain.life)}'
+                    self.destroy()
+                else:
+                    self.viewer.text_life.value = f'Vie: {int(self.viewer.objs_humain.life)}'
+                    self.destroy()
         for proj in self.viewer.objs_projectile:
             if self.bounding_box.intersectBB(proj.bounding_box):
                 self.viewer.objs_humain.score += 10

@@ -49,6 +49,10 @@ class ViewerGL:
         #gestion des vagues d'enemies
         self.nbr_pyramide = 10
 
+        #code KONAMI
+        self.cheat = 0
+        self.cheat_allow = False
+
         # pour faire un saut de 1 metre: (voir jumpforce.py)
         self.bool_jumping = False
         self.gravity = -9.81
@@ -215,6 +219,35 @@ class ViewerGL:
         state = glfw.get_mouse_button(self.window, glfw.MOUSE_BUTTON_LEFT)
         if (state == glfw.PRESS) :
             self.objs_humain.shoot()
+
+
+
+        #test Code KONAMI
+        if glfw.KEY_UP in self.touch and self.touch[glfw.KEY_UP]> 0 :
+            self.cheat = 1
+        if glfw.KEY_UP in self.touch and self.touch[glfw.KEY_UP]> 0 and self.cheat == 1:
+            self.cheat = 2
+        if glfw.KEY_DOWN in self.touch and self.touch[glfw.KEY_DOWN]> 0 and self.cheat == 2:
+            self.cheat = 3
+        if glfw.KEY_DOWN in self.touch and self.touch[glfw.KEY_DOWN]> 0 and self.cheat == 3:
+            self.cheat = 4
+        if glfw.KEY_LEFT in self.touch and self.touch[glfw.KEY_LEFT]> 0 and self.cheat == 4:
+            self.cheat = 5
+        if glfw.KEY_RIGHT in self.touch and self.touch[glfw.KEY_RIGHT]> 0 and self.cheat == 5:
+            self.cheat = 6
+        if glfw.KEY_LEFT in self.touch and self.touch[glfw.KEY_LEFT]> 0 and self.cheat == 6:
+            self.cheat = 7
+        if glfw.KEY_RIGHT in self.touch and self.touch[glfw.KEY_RIGHT]> 0 and self.cheat == 7:
+            self.cheat = 8
+        if glfw.KEY_B in self.touch and self.touch[glfw.KEY_B]> 0 and self.cheat == 8:
+            self.cheat = 9
+        if glfw.KEY_A in self.touch and self.touch[glfw.KEY_A]> 0 and self.cheat == 9:
+            self.cheat = 0
+            self.cheat_allow = True
+
+        
+
+
 
     def gravitation(self):
         self.velocityY += self.accelerationY * self.dt
