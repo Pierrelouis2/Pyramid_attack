@@ -14,8 +14,6 @@ class Pyramid(Entity):
         self.object.transformation.translation.z += mov[2]
         self.bounding_box.move_BB()
     
-    def create_BB(self):
-        self.bounding_box = BoundingBox(self)
 
     def destroy(self):
         self.viewer.objs_bounding_boxes.remove(self.bounding_box)
