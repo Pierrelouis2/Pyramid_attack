@@ -53,7 +53,6 @@ class Entity():
 
         if self.name != "sol" and self.name != "line":
             self.bounding_box = BoundingBox(self)
-            #self.bounding_box.move_BB()
 
 
 class BoundingBox:
@@ -80,6 +79,7 @@ class BoundingBox:
         tr.rotation_center.z = self.entity.rot[2]
         self.object = Object3D(self.entity.viewer.dic_vao[f"cube_{self.entity.name}"], self.obj.get_nb_triangles(),self.viewer.program3d_id, self.texture, tr)
         self.viewer.add_bounding_box(self)
+        self.move_BB()
 
     def intersectBB(self, b):
         return (self.p_max.x >= b.p_min.x and self.p_min.x <= b.p_max.x and self.p_max.y >= b.p_min.y and self.p_min.y <= b.p_max.y and self.p_max.z >= b.p_min.z and self.p_min.z <= b.p_max.z)

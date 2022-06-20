@@ -49,6 +49,10 @@ class ViewerGL:
         self.timer_bonus = 5
         self.time_last_bonus = 0
 
+        #gestion des vagues d'enemies
+        self.nbr_pyramide = 0
+
+
         # pour faire un saut de 1 metre: (voir jumpforce.py)
         self.bool_jumping = False
         self.gravity = -9.81
@@ -86,15 +90,17 @@ class ViewerGL:
                 if self.bool_draw_bounding_boxes:
                     for bb in self.objs_bounding_boxes:
                         bb.object.draw()
-
+                #gestion spawn pyramidE 
+                self.Spawn_pyramid()
+                
                 self.update_key()
                 self.gravitation()
                 self.update_line()
                 self.create_bonus()
                 self.objs_humain.collision()
                 self.text_character.draw()
-
-
+                
+               
             else:
                 GL.glClearColor(0.2, 0.2, 0.2, 0.5)
                 self.text_pause.draw()
@@ -247,3 +253,17 @@ class ViewerGL:
         self.objs_humain.line.object.transformation.rotation_euler[pyrr.euler.index().yaw] = yaw#self.objs_humain.object.transformation.rotation_euler[pyrr.euler.index().yaw]
         self.objs_humain.line.object.transformation.rotation_euler[pyrr.euler.index().roll] = math.cos(-yaw)*self.cam.transformation.rotation_euler[pyrr.euler.index().roll]
         self.objs_humain.line.object.transformation.rotation_euler[pyrr.euler.index().pitch] = math.sin(yaw)*self.cam.transformation.rotation_euler[pyrr.euler.index().roll]
+
+    def Spawn_pyramid(self) :
+         # Spawn Pyramide
+        if self.objs_pyramide == [] :
+            print("Pyramide")
+            nbr_pyramide = 10
+            rayon = 10
+            for i in range(nbr_pyramide):
+                teta = rand.randint(0, nbr_pyramide*10) #*10 pour evite que des pyramide spawn au meme endroit
+                print(teta)
+                pyramide = Pyramid.Pyramid(vie=1, coord=[rayon * math.cos(teta), 0, rayon * math.sin(teta)], rot=[0, 0, 0], obj=self.dic_obj["pyramid"],texture=self.dic_text["pyramid"], viewer=self, name="pyramid",vao_obj = self.dic_vao["pyramid"])
+                self.objs_pyramide.append(pyramide)
+                pyramide.create()
+                pyramide.size = pyrr.Vector3([0.25, 0.25, 0.25])

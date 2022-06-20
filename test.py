@@ -1,4 +1,8 @@
-dico = {"test1" : "clef1","test2":"clef2"}
+import multiprocessing as mp
 
-for i in dico : 
-    print(dico[i])
+dfr,dfw = mp.Pipe()
+
+dfw.send("test")
+
+print(dfr.recv())
+print(dfr.recv())
