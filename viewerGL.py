@@ -1,5 +1,4 @@
 import OpenGL.GL as GL
-import OpenGL
 import glfw
 import pyrr
 import numpy as np

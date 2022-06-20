@@ -61,9 +61,8 @@ def main():
     dic_obj["arrow"].normalize()
     dic_obj["arrow"].apply_matrix(pyrr.matrix44.create_from_scale([1, 1, 0.15, 1]))
 
-
-    viewer.dic_obj = dic_obj
-    viewer.dic_text = dic_text
+    for i in dic_obj :
+        dic_vao[i] = dic_obj[i].load_to_gpu()
 
     #chargement sol
     m = Mesh()
@@ -74,10 +73,10 @@ def main():
     m.faces = np.array([[0, 1, 2], [0, 2, 3]], np.uint32)
     dic_obj["sol"] = m
 
-    for i in dic_obj :
-        dic_vao[i] = dic_obj[i].load_to_gpu()
-
+    viewer.dic_obj = dic_obj
+    viewer.dic_text = dic_text
     viewer.dic_vao = dic_vao
+    
     #------------------------Fin Chargements des textures + objs ---------------------------
 
     # humain
