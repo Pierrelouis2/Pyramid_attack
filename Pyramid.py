@@ -31,5 +31,6 @@ class Pyramid(Entity):
                 self.destroy()
         for proj in self.viewer.objs_projectile:
             if self.bounding_box.intersectBB(proj.bounding_box):
+                self.viewer.objs_humain.score += 10
                 self.destroy()
                 proj.destroy()

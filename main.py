@@ -25,6 +25,7 @@ def main():
     dic_vao = {}
 
     #------------------------ Chargements des textures + objs ----------------------------
+
     dic_text["pyramid"] = glutils.load_texture("Textures/architecture.jpg")
     dic_text["sol"] = glutils.load_texture("Textures/TextureSand.jpeg")
     dic_text["humain"] = glutils.load_texture("Textures/multicolor.png")
@@ -62,9 +63,6 @@ def main():
     dic_obj["arrow"].normalize()
     dic_obj["arrow"].apply_matrix(pyrr.matrix44.create_from_scale([1, 1, 0.15, 1]))
 
-    for i in dic_obj :
-        dic_vao[i] = dic_obj[i].load_to_gpu()
-
     #chargement sol
     m = Mesh()
     p0, p1, p2, p3 = [-25, 0, -25], [25, 0, -25], [25, 0, 25], [-25, 0, 25]
@@ -74,10 +72,13 @@ def main():
     m.faces = np.array([[0, 1, 2], [0, 2, 3]], np.uint32)
     dic_obj["sol"] = m
 
+    for i in dic_obj :
+        dic_vao[i] = dic_obj[i].load_to_gpu()
+
     viewer.dic_obj = dic_obj
     viewer.dic_text = dic_text
     viewer.dic_vao = dic_vao
-    
+
     #------------------------Fin Chargements des textures + objs ---------------------------
 
     # humain
@@ -117,6 +118,13 @@ def main():
     text_character = Text(f"V: {int(humain.delta_posZ * 100)/100 * 60}m/s, Vcoté: {int(humain.delta_posX* 100)/100*60}m/s, Fire rate:{int(1/humain.timer_shoot* 10)/10}/s a {int(humain.v_proj*10)/10*60}m/s , saut: {h}m",
         np.array([-0.95, 0.85], np.float32), np.array([0.95, 0.95], np.float32), vao_obj, 2, viewer.programGUI_id, texture)
     viewer.text_character = text_character
+
+    # Text score du joueur
+    humain.score = 0
+    vao_obj = Text.initalize_geometry()
+    texture = glutils.load_texture('Textures/fontB2.png')
+    text_score = Text(f'Score: {humain.score}', np.array([0.85, 0.65], np.float32), np.array([0.95, 0.95], np.float32), vao_obj, 2, viewer.programGUI_id, texture)
+    viewer.text_score = text_score
 
     viewer.run()
 
