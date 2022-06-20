@@ -27,10 +27,10 @@ class Pyramid(Entity):
                 self.viewer.objs_humain.score -= 10
                 self.viewer.text_score.value = f'score: {self.viewer.objs_humain.score}'
                 self.viewer.objs_humain.life -= 1
-                self.viewer.text_life.value = f'Vie: {self.viewer.objs_humain.life}'
+                self.viewer.text_life.value = f'Vie: {int(self.viewer.objs_humain.life)}'
                 self.destroy()
             else:
-                self.viewer.text_life.value = f'Vie: {self.viewer.objs_humain.life}'
+                self.viewer.text_life.value = f'Vie: {int(self.viewer.objs_humain.life)}'
                 self.destroy()
         for proj in self.viewer.objs_projectile:
             if self.bounding_box.intersectBB(proj.bounding_box):

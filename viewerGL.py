@@ -43,7 +43,7 @@ class ViewerGL:
         self.time_last_BB = 0
         self.timer_bonus = 5
         self.time_last_bonus = 0
-        self.timer_caract = 0.2
+        self.timer_caract = 0.4
         self.time_last_caract = 0
 
         #gestion des vagues d'enemies
