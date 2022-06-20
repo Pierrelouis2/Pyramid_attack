@@ -54,7 +54,6 @@ def main():
     dic_obj["line"] = Mesh.load_obj("Textures/cube.obj")
     dic_obj["line"].normalize()
     dic_obj["line"].apply_matrix(pyrr.matrix44.create_from_scale([0.006, 0.006, 20, 1]))
-    #dic_obj["line"].apply_matrix(pyrr.matrix44.create_from_scale([0.6, 0.6, 20, 1]))
     dic_obj["cube_bonus"] = Mesh.load_obj("Textures/cube.obj")
     dic_obj["cube_bonus"].normalize()
     dic_obj["cube_bonus"].apply_matrix(pyrr.matrix44.create_from_scale([0.25, 0.25, 0.25, 1]))

@@ -44,7 +44,7 @@ class ViewerGL:
         self.time_last_bonus = 0
 
         #gestion des vagues d'enemies
-        self.nbr_pyramide = 0
+        self.nbr_pyramide = 10
 
 
         # pour faire un saut de 1 metre: (voir jumpforce.py)
@@ -243,10 +243,10 @@ class ViewerGL:
     def Spawn_pyramid(self) :
          # Spawn Pyramide
         if self.objs_pyramide == [] :
-            nbr_pyramide = 10
+            self.nbr_pyramide += 2
             rayon = 10
-            for i in range(nbr_pyramide):
-                teta = rand.randint(0, nbr_pyramide*10) #*10 pour evite que des pyramide spawn au meme endroit
+            for i in range(self.nbr_pyramide):
+                teta = rand.randint(0,self.nbr_pyramide*10) #*10 pour evite que des pyramide spawn au meme endroit
                 pyramide = Pyramid.Pyramid(vie=1, coord=[rayon * math.cos(teta), 0, rayon * math.sin(teta)], rot=[0, 0, 0], obj=self.dic_obj["pyramid"],texture=self.dic_text["pyramid"], viewer=self, name="pyramid",vao_obj = self.dic_vao["pyramid"])
                 pyramide.create()
                 pyramide.size = pyrr.Vector3([0.25, 0.25, 0.25])
