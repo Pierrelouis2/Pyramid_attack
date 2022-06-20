@@ -237,7 +237,7 @@ class ViewerGL:
             x = rand.randint(0,50) - 25
             y = 0
             z = rand.randint(0,50) - 25
-            cube_bonus = Entity.Entity(vie=1, coord=[x,y,z], rot=[0, 0, 0], obj=self.dic_obj["cube_bonus"],texture=self.dic_text["humain"], viewer=self, name="bonus",vao_obj = self.dic_vao["cube_bonus"])
+            cube_bonus = Entity.Entity(vie=1, coord=[x,y,z], rot=[0, 0, 0], obj=self.dic_obj["cube_bonus"],texture=self.dic_text["cube_bonus"], viewer=self, name="bonus",vao_obj = self.dic_vao["cube_bonus"])
             cube_bonus.create()
             cube_bonus.size = pyrr.Vector3([0.25, 0.25, 0.25])
             cube_bonus.bounding_box.move_BB()

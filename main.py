@@ -32,7 +32,8 @@ def main():
     dic_text["cube"] = glutils.load_texture("Textures/cube.png")
     dic_text["arrow"] = dic_text["humain"]
     dic_text["line"] = dic_text["humain"]
-    
+    dic_text["cube_bonus"] = glutils.load_texture("Textures/bloc_mario.png")
+
     dic_obj["pyramid"] = Mesh.load_obj("Textures/pyramid.obj")
     dic_obj["pyramid"].normalize()
     dic_obj["pyramid"].apply_matrix(pyrr.matrix44.create_from_scale([0.25, 0.25, 0.25, 1]))
@@ -124,6 +125,7 @@ def main():
     texture = glutils.load_texture('Textures/fontB2.png')
     text_score = Text(f'score: {humain.score}', np.array([0.62, -0.95], np.float32), np.array([0.95, -0.85], np.float32), vao_obj, 2, viewer.programGUI_id, texture)
     viewer.text_score = text_score
+
     viewer.run()
 
 
