@@ -93,7 +93,7 @@ class ViewerGL:
                 self.objs_humain.collision()
                 self.text_character.draw()
                 self.text_life.draw()
-
+                self.end_game()
             else:
                 GL.glClearColor(0.2, 0.2, 0.2, 0.5)
                 self.text_pause.draw()
@@ -101,6 +101,12 @@ class ViewerGL:
             # changement de buffer d'affichage pour éviter un effet de scintillement
             glfw.swap_buffers(self.window)
             glfw.poll_events()
+
+    def end_game(self):
+        if self.objs_humain.life == 0:
+            glfw.set_window_should_close(self.window, glfw.TRUE)
+        else: pass
+
 
     def key_callback(self, win, key, scancode, action, mods):
         self.win = win

@@ -124,7 +124,6 @@ def main():
     texture = glutils.load_texture('Textures/fontB2.png')
     text_score = Text(f'Score: {humain.score}', np.array([0.85, 0.65], np.float32), np.array([0.95, 0.95], np.float32), vao_obj, 2, viewer.programGUI_id, texture)
     viewer.text_score = text_score
-
     viewer.run()
 
 
