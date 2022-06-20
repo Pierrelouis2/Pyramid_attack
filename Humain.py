@@ -62,7 +62,8 @@ class Humain(Entity):
         if bonus == 5:
             self.v_proj += 0.6
         if bonus == 6:
-            self.life += 0.5
+            if self.life < 10:
+                self.life += 1
         self.update_text_character()
 
     def destroy_bonus(self, bonus):
