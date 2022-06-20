@@ -24,10 +24,10 @@ class Pyramid(Entity):
         if self.bounding_box.intersectBB(self.viewer.objs_humain.bounding_box):
             if self.viewer.objs_humain.life != 0:
                 self.viewer.objs_humain.life -= 1
-                self.viewer.text_life.value = f'Vie: {self.viewer.objs_humain.life}'
+                self.viewer.text_life.value = f'Vie: {int(self.viewer.objs_humain.life)}'
                 self.destroy()
             else:
-                self.viewer.text_life.value = f'Vie: {self.viewer.objs_humain.life}'
+                self.viewer.text_life.value = f'Vie: {int(self.viewer.objs_humain.life)}'
                 self.destroy()
         for proj in self.viewer.objs_projectile:
             if self.bounding_box.intersectBB(proj.bounding_box):

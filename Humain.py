@@ -43,7 +43,7 @@ class Humain(Entity):
 
     def bonus(self, bonus):
         self.destroy_bonus(bonus)
-        bonus = rand.randint(0,5)
+        bonus = rand.randint(0,6)
         if bonus == 0:
             self.delta_posX +=0.04
         if bonus == 1:
@@ -57,6 +57,8 @@ class Humain(Entity):
                 self.weight -= 5
         if bonus == 5:
             self.v_proj += 0.6
+        if bonus == 6:
+            self.life += 0.5
         self.update_text_character()
 
     def destroy_bonus(self, bonus):
@@ -67,4 +69,4 @@ class Humain(Entity):
     def update_text_character(self):
         V_init = self.jumping_force/self.weight * self.viewer.dt
         h= int(((0.5 * V_init**2)/self.viewer.gravity)*10)/10
-        self.viewer.text_character.value = f"V: {int(self.delta_posZ * 10)/100 * 60}m/s, Vcoté: {int(self.delta_posX* 10)/100*60}m/s, Fire rate:{int(1/self.timer_shoot* 10)/10}/s a {int(self.v_proj*10)/10*60}m/s , saut: {h}m"
+        self.viewer.text_character.value = f"V: {int(self.delta_posZ * 100 * 60)/100}m/s, Vcoté: {int(self.delta_posX* 100 * 60)/100}m/s, Fire rate:{int(1/self.timer_shoot* 10)/10}/s a {int(self.v_proj*10)/10*60}m/s , saut: {-h}m"
