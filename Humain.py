@@ -38,11 +38,6 @@ class Humain(Entity):
             self.viewer.objs_projectile.append(proj)
             self.time_last_shoot = time.time()
 
-    def update_line(self):
-        self.line.object.transformation.translation = self.object.transformation.translation + 0.1
-        self.line.object.transformation.rotation_euler[pyrr.euler.index().yaw] = self.object.transformation.rotation_euler[pyrr.euler.index().yaw]
-        self.line.object.transformation.rotation_euler[pyrr.euler.index().roll] = -self.viewer.cam.transformation.rotation_euler[pyrr.euler.index().roll]
-
     def collision(self):
         for bonus in self.viewer.objs_bonus:
             if self.bounding_box.intersectBB(bonus.bounding_box):
