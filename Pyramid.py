@@ -15,6 +15,7 @@ class Pyramid(Entity):
     
 
     def destroy(self):
+
         self.viewer.objs_bounding_boxes.remove(self.bounding_box)
         self.viewer.objs_pyramide.remove(self)
         self.viewer.objs.remove(self)
@@ -23,6 +24,8 @@ class Pyramid(Entity):
     def collision(self):
         if self.bounding_box.intersectBB(self.viewer.objs_humain.bounding_box):
             if self.viewer.objs_humain.life != 0:
+                self.viewer.objs_humain.score -= 10
+                self.viewer.text_score.value = f'score: {self.viewer.objs_humain.score}'
                 self.viewer.objs_humain.life -= 1
                 self.viewer.text_life.value = f'Vie: {self.viewer.objs_humain.life}'
                 self.destroy()
@@ -32,5 +35,6 @@ class Pyramid(Entity):
         for proj in self.viewer.objs_projectile:
             if self.bounding_box.intersectBB(proj.bounding_box):
                 self.viewer.objs_humain.score += 10
+                self.viewer.text_score.value = f'score: {self.viewer.objs_humain.score}'
                 self.destroy()
                 proj.destroy()
