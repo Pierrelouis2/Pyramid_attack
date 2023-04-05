@@ -3,7 +3,7 @@ from matplotlib import pyplot as plt
 
 
 # -----Quel tableau choisir temps ou force: ----------------------
-case = "temps"
+case = "force"
 jump_force = 1000  # precision (en kg.m.s-2)
 jump_force_offset = 0
 
@@ -19,8 +19,7 @@ if case == "force":
     count = 30
     max = [0 for i in range(count)]
     for i in range(count):
-        acceleration = ((i * jump_force) + jump_force_offset) / \
-            masse + gravity_obj
+        acceleration = ((i * jump_force) + jump_force_offset) / masse + gravity_obj
         vitesse += acceleration * dt
         while True:
             position += vitesse * dt

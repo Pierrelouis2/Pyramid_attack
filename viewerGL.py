@@ -254,13 +254,14 @@ class ViewerGL:
         X = self.objs_humain.object.transformation.translation.x
         Y = self.objs_humain.object.transformation.translation.y
         Z = self.objs_humain.object.transformation.translation.z
+        #collision avec le sol
         if self.objs_humain.object.transformation.translation.y + self.velocityY * self.dt < 0.5 and not (X > 25 or X < -25) and not (Z > 25 or Z < -25) and Y > -0.5:
             self.velocityY = 0
             self.bool_jumping = False
+        # en cas de chute on revient au centre de la carte
         if self.objs_humain.object.transformation.translation.y < -10:
-            self.objs_humain.object.transformation.translation.x = 0
-            self.objs_humain.object.transformation.translation.y = 0.75
-            self.objs_humain.object.transformation.translation.z = 0
+            self.objs_humain.object.transformation.translation = pyrr.Vector3([0,0.75,0])
+        # on applique la gravité 
         self.objs_humain.object.transformation.translation += \
             pyrr.matrix33.apply_to_vector(pyrr.matrix33.create_from_eulers(self.objs_humain.object.transformation.rotation_euler), pyrr.Vector3([0, self.velocityY * self.dt, 0]))
         self.accelerationY = self.gravity

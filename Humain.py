@@ -42,7 +42,6 @@ class Humain(Entity):
                 self.bonus(bonus)
 
     def bonus(self, bonus):
-
         self.viewer.objs_humain.score += 5
         self.viewer.text_score.value = f'score: {self.viewer.objs_humain.score}'
         
@@ -67,7 +66,6 @@ class Humain(Entity):
         self.update_text_character()
 
     def destroy_bonus(self, bonus):
-
         self.viewer.objs_bounding_boxes.remove(bonus.bounding_box)
         self.viewer.objs_bonus.remove(bonus)
         self.viewer.objs.remove(bonus)
